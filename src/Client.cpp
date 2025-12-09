@@ -1,14 +1,7 @@
 #include "Client.hpp"
 
-Client::Client()
-{
-	this->_fd = -1;
-	this->_nickName = "";
-	this->_userName = "";
-	this->_operator = false;
-	this->_registered = false;;
-	this->_logedIn = false;
-}
+Client::Client() : _fd(-1), _operator(false), _registered(false), _logedIn(false)
+{}
 
 Client::Client(int fd, std::string nickname, std::string username)
 {

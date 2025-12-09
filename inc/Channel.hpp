@@ -1,5 +1,4 @@
-#ifndef CHANNEL_HPP
-# define CHANNEL_HPP
+#pragma once
 
 #include "Client.hpp"
 #include "Server.hpp"
@@ -9,6 +8,7 @@
 #define GRE "\e[1;32m"
 #define YEL "\e[1;33m"
 
+class Client;
 
 class Channel
 {
@@ -72,5 +72,3 @@ class Channel
 		void				sendToAll(std::string repl);
 		void				sendToEveryoneElse(std::string repl, int fd);
 };
-
-#endif

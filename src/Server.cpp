@@ -1,11 +1,7 @@
 #include "Server.hpp"
 
-Server::Server()
-{
-	this->_signal = false;
-	this->_port = 0;
-	this->_serverSocketFd = -1;
-}
+Server::Server() : _signal(false),_serverSocketFd(-1)
+{}
 
 Server::Server(Server const &og)
 {
@@ -189,7 +185,7 @@ void	Server::receiveNewData(int fd)
 
 void	handleMessage(int fd, char *buffer)
 {
-	
+
 }
 
 // remove methods
@@ -281,4 +277,19 @@ void Server::signalHandler(int signum)
 	(void)signum;
 	std::cout << "Signal Received!" << std::endl;
 	Server::_signal = true;
+}
+
+
+
+std::vector<std::string> splitCmd(std::string &str)
+{
+	std::vector<std::string> vec;
+	std::istringstream stm(str);
+	std::string token;
+	while(stm >> token)
+	{
+		vec.push_back(token);
+		token.clear();
+	}
+	return vec;
 }

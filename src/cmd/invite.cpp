@@ -61,5 +61,5 @@ void	invite(std::string &cmd, int &fd)
 	std::string rpl1 = (": 301 " + getClient(fd)->getNick() + " " + clt->getNick() + " " + sCmd[2] + "\r\n");
 	sendResp(rpl1, fd);
 	std::string rpl2 = (":" + clt->getHostName() + " INVITE " + clt->getNick() + " " + sCmd[2] + "\r\n");
-	sendResp(rpl2, fd);
+	sendResp(rpl2, clt->getFd());
 }
