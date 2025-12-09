@@ -6,3 +6,5 @@ objects/
 *.swp
 .dist/
 .DS_Store
+
+ircserv

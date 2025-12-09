@@ -123,7 +123,7 @@ void	Server::socketInit()
 
 	if (this->_serverSocketFd == -1)
 		throw (std::runtime_error("Failed to create server socket"));
-	std::cout << _serverSocketFd << std::endl;
+
 	if (setsockopt(_serverSocketFd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0 )
 		throw (std::runtime_error("Failed to set option (SP_REUSEADDR) on socket"));
 
@@ -260,7 +260,7 @@ void	senderr(int code, std::string clientname, int fd, std::string msg)
 	std::stringstream	ss;
 	ss << ":localhost " << code << " " << clientname << msg;
 	std::string resp = ss.str();
-	if (send(fd, resp.c_str(), resp.size(), 0) == -1);
+	if (send(fd, resp.c_str(), resp.size(), 0) == -1)
 		std::cout << "send() failed" << std::endl;
 }
 
@@ -269,7 +269,7 @@ void	senderr(int code, std::string clientname, std::string channelname, int fd, 
 	std::stringstream	ss;
 	ss << ":localhost " << code << " " << clientname << " " << channelname << msg;
 	std::string resp = ss.str();
-	if (send(fd, resp.c_str(), resp.size(), 0) == -1);
+	if (send(fd, resp.c_str(), resp.size(), 0) == -1)
 		std::cout << "send() failed" << std::endl;
 }
 
