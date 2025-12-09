@@ -1,25 +1,8 @@
 #ifndef CHANNEL_HPP
 # define CHANNEL_HPP
 
-#include <iostream>
-#include <vector>
-#include <sstream>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <poll.h>
-#include <csignal>
-#include <cstring>
-#include <cstdlib>
-#include <fstream>
-#include <ctime>
-// #include "Client.hpp"
-// #include "Channel.hpp"
-// #include "replies.hpp"
+#include "Client.hpp"
+#include "Server.hpp"
 
 #define RED "\e[1;31m"
 #define WHI "\e[0;37m"
@@ -52,8 +35,8 @@ class Channel
 		~Channel();
 
 		//*GETTERS
-		Client*				getClient(int fd) const;
-		Client*				getAdmin(int fd) const;
+		Client*				getClient(int fd);
+		Client*				getAdmin(int fd);
 		std::string 		getName() const;
 		std::string			getChannelCreation() const;
 		std::string			getPassword() const;
