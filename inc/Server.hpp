@@ -26,13 +26,13 @@ class Channel;
 class Server
 {
 	private:
-		int _port;	//-> server port
-		int _serverSocketFd;	//-> server socket file descriptor
+		int _port;
+		int _serverSocketFd;
 		static bool _signal;
-		std::string _password;	//->
-		std::vector<Client> _clients;	//-> vector of clients
-		std::vector<Channel> _channels;	//-> vector of channels
-		std::vector<struct pollfd> _clientSocketFds;	//-> vector of fds
+		std::string _password;
+		std::vector<Client> _clients;
+		std::vector<Channel> _channels;
+		std::vector<struct pollfd> _clientSocketFds;
 		struct sockaddr_in serverAddress;
 		struct sockaddr_in clientAddress;
 		struct pollfd newClient;
@@ -70,6 +70,9 @@ class Server
 
 		// remove methods
 		void	removeFds(int fd);
+		void	removeClient(int fd);
+		void	removeChannel(std::string name);
+		// void	removeChannels(int fd);
 		void	endConnection(int fd);
 
 		// close methods

@@ -53,7 +53,7 @@ std::string	Client::getUserName()
 	return this->_userName;
 }
 
-std::string Client::getHostname()
+std::string	Client::getHostname()
 {
 	std::string hostname = this->getNickName() + "!" + this->getUserName();
 	return hostname;

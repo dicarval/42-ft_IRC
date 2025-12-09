@@ -39,7 +39,7 @@ int	Server::getPort()
 	return this->_port;
 }
 
-std::string Server::getPassword()
+std::string	Server::getPassword()
 {
 	return this->_password;
 }
@@ -74,6 +74,8 @@ Channel*	Server::getChannel(std::string name)
 	return NULL;
 }
 
+// setters
+
 void	Server::setFd(int fd)
 {
 	this->_serverSocketFd = fd;
@@ -84,12 +86,14 @@ void	Server::setPort(int port)
 	this->_port = port;
 }
 
-void Server::setPassword(std::string pw)
+void	Server::setPassword(std::string pw)
 {
 	this->_password = pw;
 }
 
-void Server::serverInit()
+// server methods
+
+void	Server::serverInit()
 {
 	this->socketInit();
 
@@ -113,7 +117,7 @@ void Server::serverInit()
 	closeFds();
 }
 
-void Server::socketInit()
+void	Server::socketInit()
 {
 	serverAddress.sin_family = AF_INET;
 	serverAddress.sin_addr .s_addr = INADDR_ANY;
@@ -183,12 +187,14 @@ void	Server::receiveNewData(int fd)
 		handleMessage(fd, buffer);
 }
 
-void	endConnection(int fd)
+void	handleMessage(int fd, char *buffer)
 {
-
+	
 }
 
-void Server::removeFds(int fd)
+// remove methods
+
+void	Server::removeFds(int fd)
 {
 	for (size_t i = 0; i < this->_clientSocketFds.size(); i++)
 	{
@@ -199,6 +205,62 @@ void Server::removeFds(int fd)
 			}
 	}
 }
+
+void	Server::removeClient(int fd)
+{
+	for (size_t i = 0; i < this->_clients.size(); i++)
+	{
+		if (this->_clients[i].getFd() == fd)
+			{
+				this->_clients.erase(this->_clients.begin() + i);
+					return ;
+			}
+	}
+}
+
+void	Server::removeChannel(std::string name)
+{
+	for (size_t i = 0; i < this->_channels.size(); i++)
+	{
+		if (this->_channels[i].getName() == name)
+			{
+				this->_channels.erase(this->_channels.begin() + i);
+					return ;
+			}
+	}
+}
+
+// void	Server::removeChannels(int fd)
+{
+	for (size_t i = 0; i < this->_channels.size(); i++)
+	{
+		int flag = 0;
+		if (_channels[i].get_client(fd))
+			_channels[i].remove_client(fd); flag = 1;
+
+		else if (_channels[i].get_admin(fd))
+			_channels[i].remove_admin(fd); flag = 1;
+
+		if (_channels[i].GetClientsNumber() == 0)
+		{
+			_channels.erase(_channels.begin() + i); i--;
+			continue;
+		}
+
+		if (flag)
+		{
+			std::string rpl = ":" + getClient(fd)->GetNickName() + "!~" + getClient(fd)->getUserName() + "@localhost QUIT Quit\r\n";
+			_channels[i].sendTo_all(rpl);
+		}
+	}
+}
+
+void	endConnection(int fd)
+{
+
+}
+
+// close methods
 
 void	Server::closeFds()
 {
@@ -214,10 +276,7 @@ void	Server::closeFds()
 	}
 }
 
-void	handleMessage(int fd, char *buffer)
-{
-	
-}
+// signal methods
 
 void Server::signalHandler(int signum)
 {

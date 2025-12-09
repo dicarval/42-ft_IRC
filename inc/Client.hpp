@@ -7,9 +7,9 @@ class Client
 		int	_fd;
 		std::string	_nickName;
 		std::string	_userName;
-		bool _operator;
-		bool _registered;
-		bool _logedIn;
+		bool	_operator;
+		bool	_registered;
+		bool	_logedIn;
 
 	public:
 		// default constructor
@@ -33,7 +33,6 @@ class Client
 		bool	getRegistered();
 		bool	getLogenIn();
 
-
 		// setters
 		void	setFd(int fd);
 		void	setNickName(std::string& nickname);
@@ -42,5 +41,4 @@ class Client
 		void	setOperator(bool value);
 		void	setRegistered(bool value);
 		void	setLogedin(bool value);
-
 };
