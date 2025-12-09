@@ -77,8 +77,8 @@ class Server
 		// void	endConnection(int fd);
 
 		// send
-		void	senderror(int code, std::string clientname, int fd, std::string msg);
-		void	senderror(int code, std::string clientname, std::string channelname, int fd, std::string msg);
+		void	senderr(int code, std::string clientname, int fd, std::string msg);
+		void	senderr(int code, std::string clientname, std::string channelname, int fd, std::string msg);
 
 		// close methods
 		void	closeFds();
