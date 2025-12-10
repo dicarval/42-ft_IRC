@@ -117,59 +117,59 @@ unsigned int Channel::getLimitOfClients() const
 
 //*SETTERS
 
-void Channel::setName(std::string v)
+void Channel::setName(std::string name)
 {
-	_channelName = v;
+	_channelName = name;
 }
 
-void Channel::setChannelCreation(std::string v)
+void Channel::setChannelCreation(std::string date)
 {
-	_channelCreation = v;
+	_channelCreation = date;
 }
 
-void Channel::setPassword(std::string v)
+void Channel::setPassword(std::string pass)
 {
-	_password = v;
+	_password = pass;
 }
 
-void Channel::setChannelTopic(std::string v)
+void Channel::setChannelTopic(std::string topic)
 {
-	_channelTopic = v;
+	_channelTopic = topic;
 }
 
-void Channel::setTopicCreation(std::string v)
+void Channel::setTopicCreation(std::string date)
 {
-	_topicCreation = v;
+	_topicCreation = date;
 }
 
-void Channel::setClientList(std::vector<Client> v)
+void Channel::setClientList(std::vector<Client> cList)
 {
-	_clients = v;
+	_clients = cList;
 }
 
-void Channel::setAdminList(std::vector<Client> v)
+void Channel::setAdminList(std::vector<Client> aList)
 {
-	_admins = v;
+	_admins = aList;
 }
 
-void Channel::setInviteOnly(bool v)
+void Channel::setInviteOnly(bool invite)
 {
-	_inviteOnly = v;
+	_inviteOnly = invite;
 }
 
-void Channel::setKey(bool v)
+void Channel::setKey(bool key)
 {
-	_key = v;
+	_key = key;
 }
 
-void Channel::setTopicRestriction(bool v)
+void Channel::setTopicRestriction(bool tRestriction)
 {
-	_topicRestriction = v;
+	_topicRestriction = tRestriction;
 }
 
-void Channel::setLimitOfClients(unsigned int v)
+void Channel::setLimitOfClients(unsigned int cLimit)
 {
-	_limitOfClients = v;
+	_limitOfClients = cLimit;
 }
 
 

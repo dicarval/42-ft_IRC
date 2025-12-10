@@ -50,17 +50,17 @@ class Channel
 		unsigned int		getLimitOfClients() const;
 
 		//*SETTERS
-		void				setName(std::string);
-		void				setChannelCreation(std::string);
-		void				setPassword(std::string);
-		void				setChannelTopic(std::string);
-		void				setTopicCreation(std::string);
-		void				setClientList(std::vector<Client>);
-		void				setAdminList(std::vector<Client>);
-		void				setInviteOnly(bool);
-		void				setKey(bool);
-		void				setTopicRestriction(bool);
-		void				setLimitOfClients(unsigned int);
+		void				setName(std::string name);
+		void				setChannelCreation(std::string date);
+		void				setPassword(std::string pass);
+		void				setChannelTopic(std::string topic);
+		void				setTopicCreation(std::string date);
+		void				setClientList(std::vector<Client> cList);
+		void				setAdminList(std::vector<Client> aList);
+		void				setInviteOnly(bool invite);
+		void				setKey(bool key);
+		void				setTopicRestriction(bool tRestriction);
+		void				setLimitOfClients(unsigned int cLimit);
 
 		//*METHODS
 		void				addClient(Client newClient);
