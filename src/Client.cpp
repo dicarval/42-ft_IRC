@@ -98,3 +98,8 @@ void	Client::setLogedin(bool value)
 {
 	this->_logedIn = value;
 }
+
+void	Client::AddChannelInvite(std::string &channelname)
+{
+	_channelInviteList.push_back(channelname);
+}
