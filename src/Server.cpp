@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-Server::Server() : _serverSocketFd(-1), _signal(false)
+Server::Server() : _maxFd(2), _reserveFd(-1), _serverSocketFd(-1), _signal(false)
 {}
 
 Server::Server(Server const &og)
@@ -97,24 +97,28 @@ void	Server::serverInit()
 	std::cout << "Waiting to accept a connection...\n";
 	while (Server::_signal == false)
 	{
-		if((poll(&_clientSocketFds[0],_clientSocketFds.size(), -1) == -1) && Server::_signal == false)
-			throw(std::runtime_error("poll() failed"));
-		for (size_t i = 0; i < _clientSocketFds.size(); i++)
-		{
-			if (_clientSocketFds[i].revents & POLLIN)
+			if((poll(&_clientSocketFds[0],_clientSocketFds.size(), -1) == -1) && Server::_signal == false)
+				throw(std::runtime_error("poll() failed"));
+			for (size_t i = 0; i < _clientSocketFds.size(); i++)
 			{
-				if (_clientSocketFds[i].fd == _serverSocketFd)
-					this->acceptNewClient();
-				else
-					this->receiveNewData(_clientSocketFds[i].fd);
+				if (_clientSocketFds[i].revents & POLLIN)
+				{
+						if (_clientSocketFds[i].fd == _serverSocketFd && _maxFd < 1020)
+							this->acceptNewClient();
+						else
+							this->receiveNewData(_clientSocketFds[i].fd);
+				}
 			}
-		}
 	}
 	closeFds();
 }
 
 void	Server::socketInit()
 {
+	_reserveFd = open("/dev/null", O_RDONLY);
+	if (_reserveFd == -1)
+		std::cerr << "Warning: failed to open reserve fd" << std::endl;
+
 	serverAddress.sin_family = AF_INET;
 	serverAddress.sin_addr .s_addr = INADDR_ANY;
 	serverAddress.sin_port = htons(this->_port);
@@ -156,8 +160,10 @@ void	Server::acceptNewClient()
 		std::cout << "ftcnl() nonblock failed." << std::endl;
 		return;
 	}
+	this->_maxFd++;
 	std::cout << "New client: " << newFd << std::endl;
-
+	if (this->_maxFd > 1019)
+		std::cout << "Max clients reached" << std::endl;
 
 	Client client;
 	memset(&clientAddress, 0, sizeof(clientAddress));
@@ -177,13 +183,18 @@ void	Server::receiveNewData(int fd)
 	char buffer[1024];
 	bzero(buffer, sizeof(buffer));
 	ssize_t  bytes = recv(fd, buffer, sizeof(buffer) - 1, 0);
-	std::cout << buffer << std::endl;
-	if (bytes == -1)
-		std::cout << "recv() failed." << std::endl;
+	if (_maxFd < 1019)
+	{
+		std::cout << buffer << std::endl;
+		if (bytes == -1)
+			std::cout << "recv() failed." << std::endl;
+		else if (bytes == 0)
+			endConnection(fd);
+		// else
+		// 	handleMessage(fd, buffer);
+	}
 	else if (bytes == 0)
-		endConnection(fd);
-	// else
-	// 	handleMessage(fd, buffer);
+			endConnection(fd);
 }
 
 void	Server::endConnection(int fd)
@@ -196,13 +207,14 @@ void	Server::endConnection(int fd)
 			removeClient(fd);
 			close(fd);
 			std::cout << "Connection closed: " << fd << std::endl;
+			_maxFd--;
 			break ;
 		}
 	}
 }
 
 // void	handleMessage(int fd, char *buffer)
-// {s
+// {
 
 // }
 
