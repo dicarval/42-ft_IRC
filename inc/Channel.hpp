@@ -44,6 +44,7 @@ class Channel
 		std::string			getChannelTopic() const;
 		std::string			getTopicCreation() const;
 		std::string			getModes();
+		std::string			getClientListStr();
 		std::vector<Client>	getClientList() const;
 		std::vector<Client>	getAdminList() const;
 		bool				getInviteOnly() const;

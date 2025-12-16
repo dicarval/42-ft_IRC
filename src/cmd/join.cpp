@@ -46,7 +46,7 @@ void	Server::channelNotExist(std::vector<std::pair<std::string, std::string> > t
 	newChannel.setChannelCreationTime();
 	this->_channels.push_back(newChannel);
 	sendRsp(RPL_JOINMSG(getClientFd(fd)->getHostname(), getClientFd(fd)->getIpAddress(), newChannel.getName()) + \
-			RPL_NAMREPLY(getClientFd(fd)->getNickName(), newChannel.getName(), newChannel.getClientList()) + \
+			RPL_NAMREPLY(getClientFd(fd)->getNickName(), newChannel.getName(), newChannel.getClientListStr()) + \
 			RPL_ENDOFNAMES(getClientFd(fd)->getNickName(), newChannel.getName()), fd);
 }
 
@@ -84,12 +84,12 @@ void	Server::channelExist(std::vector<std::pair<std::string, std::string> > toke
 	this->_channels[j].addClient(*clt);
 	if (_channels[j].getChannelTopic().empty())
 		sendRsp(RPL_JOINMSG(getClientFd(fd)->getHostname(), getClientFd(fd)->getIpAddress(), token[i].first) + \
-			RPL_NAMREPLY(getClientFd(fd)->getNickName(), _channels[j].getName(), _channels[j].getClientList()) + \
+			RPL_NAMREPLY(getClientFd(fd)->getNickName(), _channels[j].getName(), _channels[j].getClientListStr()) + \
 			RPL_ENDOFNAMES(getClientFd(fd)->getNickName(), _channels[j].getName()), fd);
 	else
 		sendRsp(RPL_JOINMSG(getClientFd(fd)->getHostname(), getClientFd(fd)->getIpAddress(), token[i].first) + \
 			RPL_TOPICIS(getClientFd(fd)->getNickName(), _channels[j].getName(), _channels[j].getChannelTopic()) + \
-			RPL_NAMREPLY(getClientFd(fd)->getNickName(), _channels[j].getName(), _channels[j].getClientList()) + \
+			RPL_NAMREPLY(getClientFd(fd)->getNickName(), _channels[j].getName(), _channels[j].getClientListStr()) + \
 			RPL_ENDOFNAMES(getClientFd(fd)->getNickName(), _channels[j].getName()), fd);
 	_channels[j].sendToEveryoneElse(RPL_JOINMSG(getClientFd(fd)->getHostname(), getClientFd(fd)->getIpAddress(), token[i].first), fd);
 }
