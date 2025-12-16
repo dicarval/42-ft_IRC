@@ -15,13 +15,13 @@ void	Server::invite(std::vector<std::string> &cmd, int &fd)
 {
 	if (cmd.size() < 3)
 	{
-		sendRsp(ERR_NOTENOUGHPARAM(getClientFd(fd)->getNickName()), fd); //?! ERR_NEEDMOREPARAMS (461)
+		sendRsp(ERR_NEEDMOREPARAMS(getClientFd(fd)->getNickName()), fd); //?! ERR_NEEDMOREPARAMS (461)
 		return ;
 	}
 	std::string chanName = cmd[2].substr(1);
 	if ((cmd[2][0] != '#') || !getChannel(chanName))
 	{
-		sendRsp(ERR_CHANNELNOTFOUND(getClientFd(fd)->getNickName(), chanName), fd);
+		sendRsp(ERR_NOSUCHCHANNEL(getClientFd(fd)->getNickName(), chanName), fd);
 		return ;
 	}
 	if (!(getChannel(chanName)->getClient(fd)) && !(getChannel(chanName)->getAdmin(fd)))

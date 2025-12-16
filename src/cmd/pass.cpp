@@ -11,11 +11,12 @@ void	Server::pass(std::vector<std::string> &cmd, int fd)
 	Client *cli = getClientFd(fd);
 	if (cmd.size() != 2)
 	{
-		sendRsp(ERR_NOTENOUGHPARAM(std::string("*")), fd);
+		sendRsp(ERR_NEEDMOREPARAMS(std::string("*")), fd);
 		return ;
 	}
 	else if (!cli->getRegistered())
 	{
+		//std::cout << "password: " << cmd[1] << std::endl;
 		if (cmd[1] == _password)
 			cli->setRegistered(true);
 		else

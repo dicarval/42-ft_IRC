@@ -186,7 +186,7 @@ void	Server::receiveNewData(int fd)
 	Client *cli = getClientFd(fd);
 	if (_maxFd < 1020)
 	{
-		std::cout << buffer << std::endl;
+		std::cout << buffer;
 		if (bytes == -1)
 			std::cout << "recv() failed." << std::endl;
 		else if (bytes == 0)
@@ -196,8 +196,8 @@ void	Server::receiveNewData(int fd)
 			cli->setBuffer(buffer);
 			if(cli->getBuffer().find_first_of("\r\n") == std::string::npos)
 				return;
-			// parseMessage(fd, buffer);
-			std::cout << cli->getBuffer();
+			std::string message = buffer;
+			parseMessage(message, fd);
 			if(getClientFd(fd))
 				getClientFd(fd)->clearBuffer();
 		}
@@ -360,6 +360,7 @@ bool	Server::registered(int &fd)
 
 void	Server::parseMessage(std::string &cmd, int &fd)
 {
+	// std::cout << cmd << std::endl;
 	std::vector<std::string> tokens = splitCmd(cmd);
 
 	if (tokens.size())

@@ -208,14 +208,14 @@ void	Server::mode(std::vector<std::string> &cmd, int fd)
 
 	if (cmd.size() < 2)
 	{
-		sendRsp(ERR_NOTENOUGHPARAM(client->getNickName()), fd);
+		sendRsp(ERR_NEEDMOREPARAMS(client->getNickName()), fd);
 		return ;
 	}
 	channelName = cmd[1];
 	channel = getChannel(channelName.substr(1));
 	if (channelName[0] != '#' || !channel)
 	{
-		sendRsp(ERR_CHANNELNOTFOUND(client->getNickName(), channelName), fd);
+		sendRsp(ERR_NOSUCHCHANNEL(client->getNickName(), channelName), fd);
 		return ;
 	}
 	else if (!channel->getClient(fd) && !channel->getAdmin(fd))
