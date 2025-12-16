@@ -94,6 +94,17 @@ class Server
 		// parsing
 		std::vector<std::string>	splitCmd(std::string &str);
 
+		// pass cmd
+		void	pass(std::string password, int fd);
+
+		// nick cmd
+		bool	validNick(std::string& nickName);
+		bool	nickInUse(std::string& nickName);
+		void	nick(std::string nickName, int fd);
+
+		// user cmd
+		void	user(std::vector<std::string> &cmd, int fd);
+
 		// invite cmd
 		void	invite(std::vector<std::string> &cmd, int &fd);
 
@@ -106,4 +117,10 @@ class Server
 
 		// kick cmd
 		void	kick(std::vector<std::string> &cmd, int &fd);
+
+		// mode cmd
+		std::string	limitMode(std::vector<std::string> tokens, Channel *channel, size_t &pos, char opera, int fd, std::string &args, std::string chain);
+		std::string	operatorPrivilegeMode(std::vector<std::string> tokens, Channel *channel, size_t &pos, char opera, int fd, std::string &args, std::string chain);
+		std::string	passwordMode(std::vector<std::string> tokens, Channel *channel, size_t &pos, char opera, int fd, std::string &args, std::string chain);
+		void		mode(std::vector<std::string> &cmd, int fd);
 };
