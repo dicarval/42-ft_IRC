@@ -1,4 +1,4 @@
-#include "Server.hpp"
+#include "../../inc/Server.hpp"
 
 void	Server::splitPrivmsg(std::vector<std::string> &tokens, \
 std::vector<std::string> &recipients, \
@@ -38,29 +38,29 @@ void	Server::privmsg(std::vector<std::string> &tokens, int fd)
 	tokens.erase(tokens.begin());
 	splitPrivmsg(tokens, recipients, channRecipients, msg, fd);
 	if (recipients.empty() && channRecipients.empty())
-		return (sendResponse(ERR_NORECIPIENT(getClientFd(fd)->getNickName()), fd));
+		return (sendRsp(ERR_NORECIPIENT(this->getClientFd(fd)->getNickName()), fd));
 	if (msg.empty())
-		return (sendResponse(ERR_NOTEXTTOSEND(getClientFd(fd)->getNickName()), fd));
+		return (sendRsp(ERR_NOTEXTTOSEND(this->getClientFd(fd)->getNickName()), fd));
 	if (recipients.size() + channRecipients.size() > 10)
-		return (sendResponse(ERR_TOOMANYTARGETS(getClientFd(fd)->getNickName()), fd));
+		return (sendRsp(ERR_TOOMANYTARGETS(this->getClientFd(fd)->getNickName()), fd));
 	std::string msgToSend = msg + CRLF;
 	for (size_t i = 0; i < recipients.size(); i++)
 	{
 		if (this->getClientNick(recipients[i]))
 		{
 			int fdRecipient = this->getClientNick(recipients[i])->getFd();
-			sendResponse(":" + this->getClient(fd)->getNickName() + "!~" + this->getClient(fd)->getUserName() + \
+			sendRsp(":" + this->getClientFd(fd)->getNickName() + "!~" + this->getClientFd(fd)->getUserName() + \
 			"@localhost PRIVMSG " + recipients[i] + " :" + msgToSend, fdRecipient);
 		}
 		else
-			sendResponse(ERR_NOSUCHNICK(recipients[i]), fd);
+			sendRsp(ERR_NOSUCHNICK(std::string ("PRIVMSG"), recipients[i]), fd);
 	}
 	for (size_t i = 0; i < channRecipients.size(); i++)
 	{
 		if (this->getChannel(channRecipients[i]))
-			this->getChannel(channRecipients[i])->sendToAll(":" + this->getClient(fd)->getNickName() + "!~" + \
-			this->getClient(fd)->getUserName() + "@localhost PRIVMSG #" + channRecipients[i] + " :" + msgToSend, fd);
+			this->getChannel(channRecipients[i])->sendToAll(":" + this->getClientFd(fd)->getNickName() + "!~" + \
+			this->getClientFd(fd)->getUserName() + "@localhost PRIVMSG #" + channRecipients[i] + " :" + msgToSend);
 		else
-			sendResponse(ERR_NOSUCHNICK(channRecipients[i], this->getClient(fd)->getNickName()), fd);
+			sendRsp(ERR_NOSUCHNICK(channRecipients[i], this->getClientFd(fd)->getNickName()), fd);
 	}
 }

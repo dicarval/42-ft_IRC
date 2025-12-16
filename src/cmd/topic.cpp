@@ -1,6 +1,5 @@
-#include "Server.hpp"
-//!! carefull with the channel's non-defined arguments in channel construction
-//!! ERR_NOTOPERATOR needs the nickname
+#include "../../inc/Server.hpp"
+//!! ERR_NOTOPERATOR is not the right error
 
 bool	findRestriction(bool restriction, Client* admin)
 {
@@ -37,44 +36,44 @@ void	Server::topic(std::vector<std::string> &tokens, int fd)
 
 	tokens.erase(tokens.begin());
 	if (!splitTopic(tokens, chanName, topic))
-		return (sendResponse(ERR_NOTENOUGHPARAM(this->getClientFd(fd)->getNickName()), fd));
+		return (sendRsp(ERR_NOTENOUGHPARAM(this->getClientFd(fd)->getNickName()), fd));
 	if (*(chanName.begin()) == '#')
 		chanName.erase(chanName.begin());
 	else
-		return (sendResponse(ERR_CHANNELNOTFOUND(this->getClientFd(fd)->getNickName(), chanName), fd));
-	if (!this->getChannel(chanName)->getClientFd(fd) && !this->getChannel(chanName)->getAdmin(fd))
-		return (sendResponse(ERR_NOTONCHANNEL(this->getClientFd(fd)->getNickName(), "#" + chanName), fd));
+		return (sendRsp(ERR_CHANNELNOTFOUND(this->getClientFd(fd)->getNickName(), chanName), fd));
+	if (!this->getChannel(chanName)->getClient(fd) && !this->getChannel(chanName)->getAdmin(fd))
+		return (sendRsp(ERR_NOTONCHANNEL(this->getClientFd(fd)->getNickName(), "#" + chanName), fd));
 	if (tokens.size() == 1)
 	{
 		if (this->getChannel(chanName)->getChannelTopic() == "")
-			return (sendResponse(RPL_NOTOPIC(this->getClientFd(fd)->getNickName(), chanName), fd));
+			return (sendRsp(RPL_NOTOPIC(this->getClientFd(fd)->getNickName(), chanName), fd));
 		else
-			return (sendResponse(RPL_TOPICIS(this->getClientFd(fd)->getNickName(), chanName, this->getChannel(chanName)->getChannelTopic()), fd),\
-			sendResponse(RPL_TOPICWHOTIME(this->getClientFd(fd)->getNickName(), chanName, this->getChannel(chanName)->getTopicCreation()), fd));
+			return (sendRsp(RPL_TOPICIS(this->getClientFd(fd)->getNickName(), chanName, this->getChannel(chanName)->getChannelTopic()), fd),\
+			sendRsp(RPL_TOPICWHOTIME(this->getClientFd(fd)->getNickName(), chanName, this->getChannel(chanName)->getTopicCreation()), fd));
 	}
 
 	bool restriction = findRestriction(this->getChannel(chanName)->getTopicRestriction(), this->getChannel(chanName)->getAdmin(fd));
 	if (restriction)
-		return (sendResponse(ERR_NOTOPERATOR(chanName), fd));
+		return (sendRsp(ERR_NOTOPERATOR(chanName), fd));
 	if (tokens.size() == 2 && tokens[1] == ":")
 	{
 		this->getChannel(chanName)->setChannelTopic("");
 		this->getChannel(chanName)->setTopicCreation("");
 		return (this->getChannel(chanName)->sendToAll(":" + this->getClientFd(fd)->getNickName() + "!" + this->getClientFd(fd)->getUserName() + \
-		"localhost TOPIC #" + chanName + " :" + this->getChannel(chanName)->getTopic() + CRLF));
+		"localhost TOPIC #" + chanName + " :" + this->getChannel(chanName)->getChannelTopic() + CRLF));
 	}
 	else if (tokens.size() >= 2 && tokens[1][0] != ':')
 	{
 		this->getChannel(chanName)->setChannelTopic(tokens[1]);
-		this->getChannel(chanName)->setTopicCreation(/*time function*/);
+		this->getChannel(chanName)->setTopicCreation(currentTime());
 		return (this->getChannel(chanName)->sendToAll(":" + this->getClientFd(fd)->getNickName() + "!" + this->getClientFd(fd)->getUserName() + \
-		"localhost TOPIC #" + chanName + " :" + this->getChannel(chanName)->getTopic() + CRLF));
+		"localhost TOPIC #" + chanName + " :" + this->getChannel(chanName)->getChannelTopic() + CRLF));
 	}
 	else
 	{
 		this->getChannel(chanName)->setChannelTopic(topic);
-		this->getChannel(chanName)->setTopicCreation(/*time function*/);
+		this->getChannel(chanName)->setTopicCreation(currentTime());
 		this->getChannel(chanName)->sendToAll(":" + this->getClientFd(fd)->getNickName() + "!" + this->getClientFd(fd)->getUserName() + \
-		"localhost TOPIC #" + chanName + " :" + this->getChannel(chanName)->getTopic() + CRLF);
+		"localhost TOPIC #" + chanName + " :" + this->getChannel(chanName)->getChannelTopic() + CRLF);
 	}
 }

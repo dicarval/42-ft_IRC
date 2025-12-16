@@ -1,7 +1,7 @@
-#include "Server.hpp"
+#include "../../inc/Server.hpp"
 
 
-std::string SplitQuit(std::vector<std::string> &tokens)
+std::string Server::splitQuit(std::vector<std::string> &tokens)
 {
 	if (tokens.size() == 1)
 		return ("Quit");
@@ -14,25 +14,25 @@ void	Server::quit(std::vector<std::string> &tokens, int fd)
 	std::string reason;
 
 	reason = splitQuit(tokens) + CRLF;
-	for (size_t i = 0; i < this->channels.size(); i++)
+	for (size_t i = 0; i < this->_channels.size(); i++)
 	{
-		if (this->channels[i]->getClient(fd))
+		if (this->_channels[i].getClient(fd))
 		{
-			this->channels[i]->removeClient(fd);
-			if (this->channels[i]->getNumberOfClients == 0)
-				this->channels.erase(this->channels.begin() + i);
+			this->_channels[i].removeClient(fd);
+			if (this->_channels[i].getNumberOfClients() == 0)
+				this->_channels.erase(this->_channels.begin() + i);
 			else
-				this->channels[i].sendToAll(":" + this->getClient(fd)->getNickName() + \
-				"!~" + this->getClient(fd)->getUserName() + "@localhost QUIT " + reason);
+				this->_channels[i].sendToAll(":" + this->getClientFd(fd)->getNickName() + \
+				"!~" + this->getClientFd(fd)->getUserName() + "@localhost QUIT " + reason);
 		}
-		if (this->channels[i]->getAdmin(fd))
+		if (this->_channels[i].getAdmin(fd))
 		{
-			this->channels[i]->removeAdmin(fd);
-			if (this->channels[i]->getNumberOfClients == 0)
-				this->channels.erase(this->channels.begin() + i);
+			this->_channels[i].removeAdmin(fd);
+			if (this->_channels[i].getNumberOfClients() == 0)
+				this->_channels.erase(this->_channels.begin() + i);
 			else
-				this->channels[i].sendToAll(":" + this->getClient(fd)->getNickName() + \
-				"!~" + this->getClient(fd)->getUserName() + "@localhost QUIT " + reason);
+				this->_channels[i].sendToAll(":" + this->getClientFd(fd)->getNickName() + \
+				"!~" + this->getClientFd(fd)->getUserName() + "@localhost QUIT " + reason);
 		}
 	}
 	this->endConnection(fd);

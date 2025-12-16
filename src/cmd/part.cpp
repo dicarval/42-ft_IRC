@@ -1,4 +1,4 @@
-#include "Server.hpp"
+#include "../../inc/Server.hpp"
 
 bool	Server::splitPart(std::vector<std::string> &tokens, \
 std::vector<std::string> &channPart, std::string &reason, int fd)
@@ -25,7 +25,7 @@ std::vector<std::string> &channPart, std::string &reason, int fd)
 			channPart[i].erase(channPart[i].begin());
 		else
 		{
-			sendResponse(ERR_CHANNELNOTFOUND(this->getClientFd(fd)->getNickName(), channPart[i]), fd);
+			sendRsp(ERR_CHANNELNOTFOUND(this->getClientFd(fd)->getNickName(), channPart[i]), fd);
 			channPart.erase(channPart.begin() + i--);
 		}
 	}
@@ -40,19 +40,19 @@ void	Server::part(std::vector<std::string> &tokens, int fd)
 
 	tokens.erase(tokens.begin());
 	if (!splitPart(tokens, channPart, reason, fd))
-		return (sendResponse(ERR_NOTENOUGHPARAM(this->getClientFd(fd)->getNickName()), fd));
+		return (sendRsp(ERR_NOTENOUGHPARAM(this->getClientFd(fd)->getNickName()), fd));
 	for (size_t i = 0; i < channPart.size(); i++)
 	{
 		bool exist = false;
-		for (size_t j; j < this->channels.size(); j++)
+		for (size_t j; j < this->_channels.size(); j++)
 		{
-			if (this->channels[j].getName() == channPart[i])
+			if (this->_channels[j].getName() == channPart[i])
 			{
 				exist = true;
-				if (!this->channels[j].getClient(fd) && !this->channels[j].getAdmin(fd))
+				if (!this->_channels[j].getClient(fd) && !this->_channels[j].getAdmin(fd))
 				{
-					sendResponse(ERR_NOTONCHANNEL(this->getClientFd(fd)->getNickName(), \
-					this->channels[j].getName()), fd);
+					sendRsp(ERR_NOTONCHANNEL(this->getClientFd(fd)->getNickName(), \
+					this->_channels[j].getName()), fd);
 					continue ;
 				}
 				std::string msg = ":" + this->getClientFd(fd)->getNickName() + "!~" + \
@@ -61,16 +61,16 @@ void	Server::part(std::vector<std::string> &tokens, int fd)
 					msg += " :" + reason + CRLF;
 				else
 					msg += CRLF;
-				this->channels[j].sendToAll(msg);
-				if(this->channels[j].getAdmin(fd))
-					this->channels[j].removeAdmin(fd);
+				this->_channels[j].sendToAll(msg);
+				if(this->_channels[j].getAdmin(fd))
+					this->_channels[j].removeAdmin(fd);
 				else
-					this->channels[j].removeClient(fd);
-				if (this->channels[j].getNumberOfClients == 0)
-					this->channels.erase(this->channels.begin() + j);
+					this->_channels[j].removeClient(fd);
+				if (this->_channels[j].getNumberOfClients() == 0)
+					this->_channels.erase(this->_channels.begin() + j);
 			}
 		}
 		if (!exist)
-			sendResponse(ERR_CHANNELNOTFOUND(this->getClientFd(fd)->getNickName(), channPart[i]), fd);
+			sendRsp(ERR_CHANNELNOTFOUND(this->getClientFd(fd)->getNickName(), channPart[i]), fd);
 	}
 }

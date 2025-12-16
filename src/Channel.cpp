@@ -4,7 +4,7 @@
 //*CONSTRUCTORS AND DESTRUCTORS
 
 Channel::Channel()
-: _channelName(), _channelCreation(/* funcao geral de definicao de tempo */), _clients(), _admins(), _inviteOnly(false), _key(false), \
+: _channelName(), _channelCreation(currentTime()), _clients(), _admins(), _inviteOnly(false), _key(false), \
 _password(), _channelTopic(), _topicRestriction(false), _topicCreation(), _limitOfClients(0), _modes()
 {}
 
