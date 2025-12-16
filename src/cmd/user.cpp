@@ -1,3 +1,10 @@
+//* Syntax: user/USER <username> 0 * <realname>
+
+//* ERR_NOTENOUGHPARAM (461)
+//* ERR_NOTREGISTERED (451)
+//* ERR_ALREADYREGISTERED (462)
+//* RPL_CONNECTED (001)
+
 #include "../../inc/Server.hpp"
 
 void	Server::user(std::vector<std::string> &cmd, int fd)

@@ -95,12 +95,12 @@ class Server
 		std::vector<std::string>	splitCmd(std::string &str);
 
 		// pass cmd
-		void		pass(std::string password, int fd);
+		void		pass(std::vector<std::string> &cmd, int fd);
 
 		// nick cmd
 		bool		validNick(std::string& nickName);
 		bool		nickInUse(std::string& nickName);
-		void		nick(std::string nickName, int fd);
+		void		nick(std::vector<std::string> &cmd, int fd);
 
 		// part cmd
 		bool		splitPart(std::vector<std::string> &tokens, std::vector<std::string> &channPart, std::string &reason, int fd);

@@ -1,12 +1,23 @@
+//* Syntax: nick/NICK <nickname>
+
+//* ERR_NONICKNAMEGIVEN (431)
+//* ERR_ERRONEUSNICKNAME (432)
+//* ERR_NICKNAMEINUSE (433)
+//* ERR_NOTREGISTERED (451)
+
 #include "../../inc/Server.hpp"
 
 bool Server::validNick(std::string &nickName)
 {
-	if(!nickName.empty() && (nickName[0] == '&' || nickName[0] == '#' || nickName[0] == ':'))
+	if (nickName.size() > 30)
+		return false;
+	if(!nickName.empty() && !std::isalpha(nickName[0]))
 		return false;
 	for(size_t i = 1; i < nickName.size(); i++)
 	{
-		if(!std::isalnum(nickName[i]) && nickName[i] != '_')
+		if(!std::isalnum(nickName[i]) && nickName[i] != '_' && nickName[i] != '[' && \
+			nickName[i] != ']' && nickName[i] != '{' && nickName[i] != '}' && nickName[i] != '\\' && \
+			nickName[i] != '|')
 			return false;
 	}
 	return true;
@@ -22,34 +33,26 @@ bool	Server::nickInUse(std::string &nickName)
 	return false;
 }
 
-void	Server::nick(std::string nickName, int fd)
+void	Server::nick(std::vector<std::string> &cmd, int fd)
 {
-	std::string tmp;
-	nickName = nickName.substr(4);
-	size_t pos = nickName.find_first_not_of("\t\v ");
-	if (pos < nickName.size())
+	if (cmd.size() != 2)
 	{
-		nickName = nickName.substr(pos);
-		if (nickName[0] == ':')
-			nickName.erase(nickName.begin());
-	}
-	Client *cli = getClientFd(fd);
-	if (pos == std::string::npos || nickName.empty())
-	{
-		sendRsp(ERR_NOTENOUGHPARAM(std::string("*")), fd);
+		sendRsp(ERR_NONICKNAMEGIVEN(std::string("*")), fd);
 		return ;
 	}
-	if (nickInUse(nickName) && cli->getNickName() != nickName)
+	std::string tmp;
+	Client *cli = getClientFd(fd);
+	if (nickInUse(cmd[1]) && cli->getNickName() != cmd[1])
 	{
 		tmp = "*";
 		if (cli->getNickName().empty())
 			cli->setNickName(tmp);
-		sendRsp(ERR_NICKINUSE(nickName), fd);
+		sendRsp(ERR_NICKNAMEINUSE(cmd[1]), fd);
 		return ;
 	}
-	if (!validNick(nickName))
+	if (!validNick(cmd[1]))
 	{
-		sendRsp(ERR_ERRONEUSNICK(nickName), fd);
+		sendRsp(ERR_ERRONEUSNICKNAME(cmd[1]), fd);
 		return ;
 	}
 	else
@@ -57,28 +60,28 @@ void	Server::nick(std::string nickName, int fd)
 		if (cli && cli->getRegistered())
 		{
 			std::string oldNick = cli->getNickName();
-			cli->setNickName(nickName);
+			cli->setNickName(cmd[1]);
 			for (size_t i = 0; i < _channels.size(); i++)
 			{
 				Client *tmpCl = _channels[i].getClientInChannel(oldNick);
 				if (tmpCl)
-					tmpCl->setNickName(nickName);
+					tmpCl->setNickName(cmd[1]);
 			}
-			if (!oldNick.empty() && oldNick != nickName)
+			if (!oldNick.empty() && oldNick != cmd[1])
 			{
 				if (oldNick == "*" && !cli->getUserName().empty())
 				{
 					cli->setLogedin(true);
 					sendRsp(RPL_CONNECTED(cli->getNickName()), fd);
-					sendRsp(RPL_NICKCHANGE(cli->getNickName(), nickName), fd);
+					sendRsp(RPL_NICKCHANGE(cli->getNickName(), cmd[1]), fd);
 				}
 				else
-					sendRsp(RPL_NICKCHANGE(oldNick, nickName), fd);
+					sendRsp(RPL_NICKCHANGE(oldNick, cmd[1]), fd);
 				return ;
 			}
 		}
 		else if (cli && !cli->getRegistered())
-			sendRsp(ERR_NOTREGISTERED(nickName), fd);
+			sendRsp(ERR_NOTREGISTERED(cmd[1]), fd);
 	}
 	if (cli && cli->getRegistered() && !cli->getUserName().empty() && !cli->getNickName().empty() && cli->getNickName() != "*" && !cli->getLogedIn())
 	{

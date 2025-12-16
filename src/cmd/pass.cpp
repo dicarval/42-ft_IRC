@@ -1,24 +1,22 @@
+//* Syntax: pass/PASS <password>
+
+//* ERR_NOTENOUGHPARAM (461)
+//* ERR_INCORPASS (464)
+//* ERR_ALREADYREGISTERED (462)
+
 #include "../../inc/Server.hpp"
 
-void	Server::pass(std::string password, int fd)
+void	Server::pass(std::vector<std::string> &cmd, int fd)
 {
 	Client *cli = getClientFd(fd);
-	password = password.substr(4);
-	size_t pos = password.find_first_not_of("\t\v ");
-	if (pos < password.size())
-	{
-		password = password.substr(pos);
-		if (password[0] == ':')
-			password.erase(password.begin());
-	}
-	if (pos == std::string::npos || password.empty())
+	if (cmd.size() != 2)
 	{
 		sendRsp(ERR_NOTENOUGHPARAM(std::string("*")), fd);
 		return ;
 	}
 	else if (!cli->getRegistered())
 	{
-		if (password == _password)
+		if (cmd[1] == _password)
 			cli->setRegistered(true);
 		else
 			sendRsp(ERR_INCORPASS(std::string("*")), fd);

@@ -1,7 +1,4 @@
-#include "../../inc/Server.hpp"
-
 //* Syntax: invite/INVITE <nickname> #<channel>
-//* Ex.: invite dicarval #bocal
 
 //* ERR_NEEDMOREPARAMS		(461)
 //* ERR_NOSUCHCHANNEL		(403)
@@ -12,27 +9,30 @@
 //* ERR_CHANNELISFULL		(471)
 //* RPL_INVITING			(341)
 
+#include "../../inc/Server.hpp"
+
 void	Server::invite(std::vector<std::string> &cmd, int &fd)
 {
-	if (cmd.size() < 3) //? ERR_NEEDMOREPARAMS (461) if there are not enough parameters
+	if (cmd.size() < 3)
 	{
-		senderr(461, getClientFd(fd)->getNickName(), fd, ": Not enough parameters!\r\n");
+		sendRsp(ERR_NOTENOUGHPARAM(getClientFd(fd)->getNickName()), fd); //?! ERR_NEEDMOREPARAMS (461)
 		return ;
 	}
-	std::string chanName = cmd[2].substr(1); //? The substr start position is 1 so it skips the '#' character
-	if ((cmd[2][0] != '#') || !getChannel(chanName)) //? ERR_NOSUCHCHANNEL (403) if there is not a '#' character and/or the channel does not exists
+	std::string chanName = cmd[2].substr(1);
+	if ((cmd[2][0] != '#') || !getChannel(chanName))
 	{
-		senderr(403, chanName, fd, ": There is no such channel!\r\n");
+		sendRsp(ERR_CHANNELNOTFOUND(getClientFd(fd)->getNickName(), chanName), fd);
 		return ;
 	}
-	if (!(getChannel(chanName)->getClient(fd)) && !(getChannel(chanName)->getAdmin(fd))) //? ERR_NOTONCHANNEL (442) if the client is not on the channel
+	if (!(getChannel(chanName)->getClient(fd)) && !(getChannel(chanName)->getAdmin(fd)))
 	{
-		senderr(442, chanName, fd, ": You are not in that channel!\r\n");
+		sendRsp(ERR_NOTONCHANNEL(getClientFd(fd)->getNickName(), chanName), fd);
 		return ;
 	}
 	if (getChannel(chanName)->getClientInChannel(cmd[1])) //? ERR_USERONCHANNEL (443) if the given nickname is already on the channel
 	{
 		senderr(443, getClientFd(fd)->getNickName(), chanName, fd, ": The client is already in the channel!\r\n");
+		//sendRsp();
 		return ;
 	}
 	Client *clt = getClientNick(cmd[1]);
