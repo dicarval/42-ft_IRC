@@ -112,6 +112,26 @@ std::string Channel::getModes()
 	return mode;
 }
 
+std::string Channel::getClientListStr()
+{
+	std::string list;
+	for (size_t i = 0; i < _admins.size(); i++)
+	{
+		list += "@" + _admins[i].getNickName();
+		if ((i + 1) < _admins.size())
+			list += " ";
+	}
+	if(_clients.size())
+		list += " ";
+	for (size_t i = 0; i < _clients.size(); i++)
+	{
+		list += "@" + _clients[i].getNickName();
+		if ((i + 1) < _clients.size())
+			list += " ";
+	}
+	return list;
+}
+
 std::vector<Client> Channel::getClientList() const
 {
 	return _clients;

@@ -231,7 +231,7 @@ void	Server::mode(std::vector<std::string> &cmd, int fd)
 	}
 	else if (!channel->getAdmin(fd))
 	{
-		sendRsp(ERR_NOTOPERATOR(channelName), fd);
+		sendRsp(ERR_CHANOPRIVSNEEDED(channelName), fd);
 		return ;
 	}
 
