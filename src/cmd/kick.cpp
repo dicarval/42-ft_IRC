@@ -65,7 +65,7 @@ void	Server::kick(std::vector<std::string> &cmd, int &fd)
 		Client *target = channel->getClientInChannel(user);
 		if (!target)
 		{
-			sendRsp(ERR_USERNOTINCHANNEL(getClientFd(fd)->getNickName(), target->getNickName(), currentChannel),fd);
+			sendRsp(ERR_USERNOTINCHANNEL(getClientFd(fd)->getNickName(), user, currentChannel), fd);
 			continue ;
 		}
 

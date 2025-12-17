@@ -82,8 +82,6 @@ class Server
 		// void	endConnection(int fd);
 
 		// send
-		void		senderr(int code, std::string clientname, int fd, std::string msg);
-		void		senderr(int code, std::string clientname, std::string channelname, int fd, std::string msg);
 		void		sendRsp(std::string msg, int fd);
 
 		// close methods

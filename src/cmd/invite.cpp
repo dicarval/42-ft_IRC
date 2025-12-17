@@ -54,6 +54,6 @@ void	Server::invite(std::vector<std::string> &cmd, int &fd)
 	clt->AddChannelInvite(chanName);
 	std::string rpl1 = (": 301 " + getClientFd(fd)->getNickName() + " " + clt->getNickName() + " " + cmd[2] + "\r\n");
 	sendRsp(rpl1, fd);
-	std::string rpl2 = (":" + clt->getHostname() + " INVITE " + clt->getNickName() + " " + cmd[2] + "\r\n");
+	std::string rpl2 = (":" +  getClientFd(fd)->getHostname() + " INVITE " + clt->getNickName() + " " + cmd[2] + "\r\n");
 	sendRsp(rpl2, clt->getFd());
 }

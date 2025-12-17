@@ -68,7 +68,7 @@ void	Server::channelExist(std::vector<std::pair<std::string, std::string> > toke
 	}
 	if (this->_channels[j].getInviteOnly())
 	{
-		if (!isInvited(getClientFd(fd), getClientFd(fd)->getNickName(), 1))
+		if (!isInvited(getClientFd(fd), token[i].first, 1))
 		{
 			sendRsp(ERR_INVITEONLYCHAN(getClientFd(fd)->getNickName(), token[i].first), fd);
 			return ;

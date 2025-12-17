@@ -310,23 +310,6 @@ void	Server::removeChannel(std::string name)
 
 
 // send
-void	Server::senderr(int code, std::string clientname, int fd, std::string msg)
-{
-	std::stringstream	ss;
-	ss << ":localhost " << code << " " << clientname << msg;
-	std::string resp = ss.str();
-	if (send(fd, resp.c_str(), resp.size(), 0) == -1)
-		std::cout << "send() failed" << std::endl;
-}
-
-void	Server::senderr(int code, std::string clientname, std::string channelname, int fd, std::string msg)
-{
-	std::stringstream	ss;
-	ss << ":localhost " << code << " " << clientname << " " << channelname << msg;
-	std::string resp = ss.str();
-	if (send(fd, resp.c_str(), resp.size(), 0) == -1)
-		std::cout << "send() failed" << std::endl;
-}
 
 void	Server::sendRsp(std::string msg, int fd)
 {
@@ -390,19 +373,19 @@ void	Server::parseMessage(std::string &cmd, int &fd)
 	{
 		if (tokens[0] == "NICK" || tokens[0] == "nick")
 		{
-			std::cout << " a entrar no nick" << std::endl;
+			//std::cout << " a entrar no nick" << std::endl;
 			nick(tokens, fd);
 		}
 		else if (tokens[0] == "PASS" || tokens[0] == "pass")
 		{
-			std::cout << " a entrar na pass" << std::endl;
+			//std::cout << " a entrar na pass" << std::endl;
 			pass(tokens, fd);
 		}
 		else if (tokens[0] == "QUIT" || tokens[0] == "quit")
 			quit(tokens, fd);
 		else if (tokens[0] == "USER" || tokens[0] == "user")
 		{
-			std::cout << " a entrar no user" << std::endl;
+			//std::cout << " a entrar no user" << std::endl;
 			user(tokens, fd);
 		}
 		else if (registered(fd))

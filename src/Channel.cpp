@@ -6,7 +6,13 @@
 Channel::Channel()
 : _channelName(), _channelCreation(currentTime()), _clients(), _admins(), _inviteOnly(false), _key(false), \
 _password(), _channelTopic(), _topicRestriction(false), _topicCreation(), _limitOfClients(0), _modes()
-{}
+{
+	_modes.push_back(std::make_pair('i', false));
+	_modes.push_back(std::make_pair('t', false));
+	_modes.push_back(std::make_pair('k', false));
+	_modes.push_back(std::make_pair('o', false));
+	_modes.push_back(std::make_pair('l', false));
+}
 
 Channel::Channel(const Channel &og)
 {
