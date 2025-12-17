@@ -28,8 +28,8 @@ std::vector<std::string> &recipients, \
 std::vector<std::string> &channPrivmsg, std::string &msg, int fd)
 {
 	std::string temp;
-
 	size_t separ = tokens[0].find(',');
+
 	for (size_t i = 0; i < tokens[0].size(); i++)
 	{
 		if (separ == std::string::npos)

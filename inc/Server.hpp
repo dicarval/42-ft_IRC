@@ -106,6 +106,7 @@ class Server
 		void		nick(std::vector<std::string> &cmd, int fd);
 
 		// part cmd
+		void		splitChannelPart(std::vector<std::string> &channPart, std::string &temp);
 		bool		splitPart(std::vector<std::string> &tokens, std::vector<std::string> &channPart, std::string &reason, int fd);
 		void		part(std::vector<std::string> &tokens, int &fd);
 
