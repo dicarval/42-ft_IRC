@@ -6,7 +6,7 @@
 
 #include "../../inc/Server.hpp"
 
-void	Server::pass(std::vector<std::string> &cmd, int fd)
+void	Server::pass(std::vector<std::string> &cmd, int &fd)
 {
 	Client *cli = getClientFd(fd);
 	if (cmd.size() != 2)

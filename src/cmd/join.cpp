@@ -157,7 +157,7 @@ int		Server::splitJoin(std::vector<std::pair<std::string, std::string> > &token,
 	return 1;
 }
 
-void	Server::join(std::vector<std::string> &cmd, int fd)
+void	Server::join(std::vector<std::string> &cmd, int &fd)
 {
 	std::vector<std::pair<std::string, std::string> > token;
 	if (!splitJoin(token, cmd, fd))

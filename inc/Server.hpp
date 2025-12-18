@@ -28,6 +28,8 @@ class Channel;
 
 class Server
 {
+		typedef void (Server::*CmdFunc)(std::vector<std::string>&, int&);
+
 	private:
 		int							_maxFd;
 		int							_port;
@@ -42,8 +44,10 @@ class Server
 		struct sockaddr_in			serverAddress;
 		struct sockaddr_in			clientAddress;
 		struct pollfd				newClient;
+		CmdFunc 					*cmdFuncs;
 
 	public:
+
 		// default constructor
 		Server();
 		// copy constructor
@@ -95,52 +99,53 @@ class Server
 		void		parseMessage(std::string &cmd, int &fd);
 
 		// pass cmd
-		void		pass(std::vector<std::string> &cmd, int fd);
+		void		pass(std::vector<std::string> &, int &);
 
 		// nick cmd
 		bool		validNick(std::string& nickName);
 		bool		nickInUse(std::string& nickName);
-		void		nick(std::vector<std::string> &cmd, int fd);
+		void		nick(std::vector<std::string> &, int &);
 
 		// part cmd
 		void		splitChannelPart(std::vector<std::string> &channPart, std::string &temp);
 		bool		splitPart(std::vector<std::string> &tokens, std::vector<std::string> &channPart, std::string &reason, int fd);
-		void		part(std::vector<std::string> &tokens, int &fd);
+		void		part(std::vector<std::string> &, int &);
 
 		// privmsg cmd
 		void		splitRecipients(std::vector<std::string> &recipients, std::vector<std::string> &channPrivmsg, std::string &temp);
 		void		splitPrivmsg(std::vector<std::string> &tokens, std::vector<std::string> &recipients, std::vector<std::string> &channPrivmsg, std::string &msg, int fd);
-		void		privmsg(std::vector<std::string> &tokens, int &fd);
+		void		privmsg(std::vector<std::string> &, int &);
 
 		// quit cmd
 		std::string	splitQuit(std::vector<std::string> &tokens);
-		void		quit(std::vector<std::string> &tokens, int &fd);
+		void		quit(std::vector<std::string> &, int &);
 
 		// topic cmd
 		int			splitTopic(std::vector<std::string> &tokens, std::string &chanName, std::string &topic);
-		void		topic(std::vector<std::string> &tokens, int &fd);
+		void		topic(std::vector<std::string> &, int &);
 
 		// user cmd
-		void		user(std::vector<std::string> &cmd, int fd);
+		void		user(std::vector<std::string> &, int &);
 
 		// invite cmd
-		void		invite(std::vector<std::string> &cmd, int &fd);
+		void		invite(std::vector<std::string> &, int &);
 
 		// join cmd
 		int			searchClientInChannels(std::string nick);
 		void		channelNotExist(std::vector<std::pair<std::string, std::string> > token, size_t i, int fd);
 		void		channelExist(std::vector<std::pair<std::string, std::string> > token, size_t i, size_t j, int fd);
 		int			splitJoin(std::vector<std::pair<std::string, std::string> > &token, std::vector<std::string> &cmd, int fd);
-		void		join(std::vector<std::string> &cmd, int fd);
+		void		join(std::vector<std::string> &, int &);
 
 		// kick cmd
-		void		kick(std::vector<std::string> &cmd, int &fd);
+		void		kick(std::vector<std::string> &, int &);
 
 		// mode cmd
 		std::string	limitMode(std::vector<std::string> tokens, Channel *channel, size_t &pos, char opera, int fd, std::string &args, std::string chain);
 		std::string	operatorPrivilegeMode(std::vector<std::string> tokens, Channel *channel, size_t &pos, char opera, int fd, std::string &args, std::string chain);
 		std::string	passwordMode(std::vector<std::string> tokens, Channel *channel, size_t &pos, char opera, int fd, std::string &args, std::string chain);
-		void		mode(std::vector<std::string> &cmd, int fd);
+		void		mode(std::vector<std::string> &, int &);
+
 };
 
 // aux

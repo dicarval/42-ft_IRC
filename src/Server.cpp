@@ -3,7 +3,10 @@
 bool Server::_signal = false;
 
 Server::Server() : _maxFd(2), _reserveFd(-1), _serverSocketFd(-1), _password("")
-{}
+{
+	cmdFuncs = {&Server::nick, &Server::pass, &Server::quit, &Server::user, &Server::invite, &Server::join, \
+	&Server::kick, &Server::mode, &Server::part, &Server::privmsg, &Server::topic};
+}
 
 Server::Server(Server const &og)
 {
@@ -363,18 +366,20 @@ bool	Server::registered(int &fd)
 void	Server::parseMessage(std::string &cmd, int &fd)
 {
 	std::vector<std::string> tokens = splitCmd(cmd);
+	std::string cmdUpper[] = {"NICK", "PASS", "QUIT", "USER", "INVITE", "JOIN", "KICK", "MODE", "PART", "PRIVMSG", "TOPIC"};
+	std::string cmdLower[] = {"nick", "pass", "quit", "user", "invite", "join", "kick", "mode", "part", "privmsg", "topic"};
+	size_t sizeCmdList = 9;
 
 	if (tokens.size())
 	{
-		if (tokens[0] == "NICK" || tokens[0] == "nick")
-			nick(tokens, fd);
-		else if (tokens[0] == "PASS" || tokens[0] == "pass")
-			pass(tokens, fd);
-		else if (tokens[0] == "QUIT" || tokens[0] == "quit")
-			quit(tokens, fd);
-		else if (tokens[0] == "USER" || tokens[0] == "user")
-			user(tokens, fd);
-		else if (registered(fd))
+		for (size_t i = 0; i < sizeCmdList; i++)
+		{
+			if (!registered(fd) && (tokens[i] == cmdUpper[i] || tokens[i] == cmdLower[i]))
+				this->cmdFuncs[i](tokens, fd);
+		}
+
+
+		if (registered(fd))
 		{
 			if (tokens[0] == "INVITE" || tokens[0] == "invite")
 				invite(tokens, fd);

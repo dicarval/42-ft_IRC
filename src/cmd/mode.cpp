@@ -198,7 +198,7 @@ std::string inviteOnly(Channel *channel, char opera, std::string chain)
 	return param;
 }
 
-void	Server::mode(std::vector<std::string> &cmd, int fd)
+void	Server::mode(std::vector<std::string> &cmd, int &fd)
 {
 	std::string channelName;
 	std::string setMode;
