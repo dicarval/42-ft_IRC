@@ -1,3 +1,5 @@
+//* Syntax: mode/MODE <target> +/-<mode>(itkol) <params>
+
 #include "../../inc/Server.hpp"
 
 std::string modeToAppend(std::string chain, char opera, char mode)
@@ -267,5 +269,5 @@ void	Server::mode(std::vector<std::string> &cmd, int fd)
 	//std::string chain = modeChain.str();
 	if (modeChain.str().empty())
 		return ;
-	channel->sendToAll(RPL_CHANGEMODE(client->getHostname(), channelName.substr(1), modeChain.str(), args));
+	channel->sendToAll(RPL_CHANGEMODE(client->getHostname(), channelName, modeChain.str(), args));
 }
