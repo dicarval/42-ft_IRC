@@ -11,10 +11,10 @@
 # define RPL_TOPICWHOTIME(nickname, channelname, topicCreation) (": 333 " + nickname + " #" + channelname + " " + topicCreation + CRLF)
 # define RPL_NAMREPLY(nickname, channelname, clientslist) (": 353 " + nickname + " @ #" + channelname + " :" + clientslist + CRLF)
 # define RPL_ENDOFNAMES(nickname, channelname) (": 366 " + nickname + " #" + channelname + " :END of /NAMES list" + CRLF)
-# define RPL_UMODEIS(hostname, channelname, mode, user) (": " + hostname + " MODE " + channelname + " " + mode + " " + user + CRLF)
-# define RPL_CHANGEMODE(hostname, channelname, mode, arguments) (": " + hostname + " MODE " + channelname + " " + mode + " " + arguments + CRLF)
-# define RPL_NICKCHANGE(oldnickname, nickname) (": " + oldnickname + " NICK " + nickname + CRLF)
-# define RPL_JOINMSG(hostname, ipaddress, channelname) (": " + hostname + "@" + ipaddress + " JOIN #" + channelname + CRLF)
+# define RPL_UMODEIS(hostname, channelname, mode, user) (":" + hostname + " MODE " + channelname + " " + mode + " " + user + CRLF)
+# define RPL_CHANGEMODE(hostname, channelname, mode, arguments) (":" + hostname + " MODE " + channelname + " " + mode + " " + arguments + CRLF)
+# define RPL_NICKCHANGE(oldnickname, nickname) (":" + oldnickname + " NICK " + nickname + CRLF)
+# define RPL_JOINMSG(hostname, ipaddress, channelname) (":" + hostname + "@" + ipaddress + " JOIN #" + channelname + CRLF)
 
 //! ERRORS
 # define ERR_NOSUCHNICK(nickname) (": 401 " + nickname + " :No such nick/channel" + CRLF)
