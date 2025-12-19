@@ -24,7 +24,7 @@ bool	isInvited(Client *clt, std::string channelName, int flag)
 int		Server::searchClientInChannels(std::string nick)
 {
 	int count = 0;
-	for (int i = 0; i < this->_channels.size(); i++)
+	for (size_t i = 0; i < this->_channels.size(); i++)
 	{
 		if (this->_channels[i].getClientInChannel(nick))
 			count++;

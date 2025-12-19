@@ -3,12 +3,7 @@
 bool Server::_signal = false;
 
 Server::Server() : _maxFd(2), _reserveFd(-1), _serverSocketFd(-1), _password("")
-{
-	cmdFuncs.push_back(&Server::nick);cmdFuncs.push_back(&Server::pass);cmdFuncs.push_back(&Server::quit);
-	cmdFuncs.push_back(&Server::user);cmdFuncs.push_back(&Server::invite);cmdFuncs.push_back(&Server::join);
-	cmdFuncs.push_back(&Server::kick);cmdFuncs.push_back(&Server::mode);cmdFuncs.push_back(&Server::part);
-	cmdFuncs.push_back(&Server::privmsg);cmdFuncs.push_back(&Server::topic);
-}
+{}
 
 Server::Server(Server const &og)
 {
@@ -210,8 +205,6 @@ void	Server::receiveNewData(int fd)
 			endConnection(fd);
 }
 
-
-
 void	Server::endConnection(int fd)
 {
 	for (std::vector<pollfd>::iterator i = _clientSocketFds.begin(); i != _clientSocketFds.end(); i++)
@@ -370,16 +363,19 @@ void	Server::parseMessage(std::string &cmd, int &fd)
 	std::vector<std::string> tokens = splitCmd(cmd);
 	std::string cmdUpper[] = {"NICK", "PASS", "QUIT", "USER", "INVITE", "JOIN", "KICK", "MODE", "PART", "PRIVMSG", "TOPIC"};
 	std::string cmdLower[] = {"nick", "pass", "quit", "user", "invite", "join", "kick", "mode", "part", "privmsg", "topic"};
-	size_t sizeCmdList = 11;
+	size_t sizeCmdNotRegistered = 4;
+	size_t sizeCmdList = sizeof(cmdUpper) / sizeof(cmdUpper[0]);
+	CmdFuncs cmdFuncs[] = {&Server::nick, &Server::pass, &Server::quit, &Server::user, &Server::invite, &Server::join, \
+	&Server::kick, &Server::mode, &Server::part, &Server::privmsg, &Server::topic};
 
 	if (tokens.size())
 	{
-		for (size_t i = 0; i < sizeCmdList; i++)
+		for (size_t i = 0; i < sizeCmdNotRegistered; i++)
 		{
 			if (!registered(fd) && (tokens[0] == cmdUpper[i] || tokens[0] == cmdLower[i]))
 				return (this->*cmdFuncs[i])(tokens, fd);
 		}
-		for (size_t i = 5; i < sizeCmdList; i++)
+		for (size_t i = 4; i < sizeCmdList; i++)
 		{
 			if (registered(fd) && (tokens[0] == cmdUpper[i] || tokens[0] == cmdLower[i]))
 				return (this->*cmdFuncs[i])(tokens, fd);

@@ -22,12 +22,16 @@ bool	findRestriction(bool restriction, Client* admin)
 
 int	Server::splitTopic(std::vector<std::string> &tokens, std::string &chanName, std::string &topic)
 {
-	if ((tokens.size() == 1 && tokens[0] == ":") || tokens.size() == 0)
+	if (tokens.size() == 0 || (tokens.size() == 1 && tokens[0] == ":"))
 		return 0;
 	chanName = tokens[0];
-	if (tokens.size() >= 2 && tokens[1].substr(0, 2) != "::")
+	if (tokens.size() == 2 && tokens[1] == ":")
+		topic = "";
+	else if(tokens.size() >= 2 && tokens[1].find(':') == std::string::npos)
+		topic = tokens[1];
+	else if (tokens.size() >= 2 && tokens[1].size() >= 2 && tokens[1].substr(0, 2) != "::")
 		topic = tokens[1].substr(1);
-	else
+	else if (tokens.size() >= 2)
 	{
 		for (size_t i = 1; i < tokens.size(); i++)
 		{
@@ -49,12 +53,14 @@ void	Server::topic(std::vector<std::string> &tokens, int &fd)
 	tokens.erase(tokens.begin());
 	if (!splitTopic(tokens, chanName, topic))
 		return (sendRsp(ERR_NEEDMOREPARAMS(this->getClientFd(fd)->getNickName()), fd));
+
 	if (*(chanName.begin()) == '#')
 		chanName.erase(chanName.begin());
 	else
 		return (sendRsp(ERR_NOSUCHCHANNEL(this->getClientFd(fd)->getNickName(), chanName), fd));
 	if (!this->getChannel(chanName)->getClient(fd) && !this->getChannel(chanName)->getAdmin(fd))
-		return (sendRsp(ERR_NOTONCHANNEL(this->getClientFd(fd)->getNickName(), "#" + chanName), fd));
+		return (sendRsp(ERR_NOTONCHANNEL(this->getClientFd(fd)->getNickName(), chanName), fd));
+
 	if (tokens.size() == 1)
 	{
 		if (this->getChannel(chanName)->getChannelTopic() == "")

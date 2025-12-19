@@ -28,8 +28,6 @@ class Channel;
 
 class Server
 {
-		typedef void (Server::*CmdFunc)(std::vector<std::string>&, int&);
-
 	private:
 		int							_maxFd;
 		int							_port;
@@ -44,7 +42,6 @@ class Server
 		struct sockaddr_in			serverAddress;
 		struct sockaddr_in			clientAddress;
 		struct pollfd				newClient;
-		std::vector<CmdFunc>		cmdFuncs;
 
 	public:
 
@@ -82,7 +79,7 @@ class Server
 		void		removeClient(int fd);
 		void		removeChannel(std::string name);
 		// void	removeChannels(int fd);
-		void	endConnection(int fd);
+		void		endConnection(int fd);
 
 		// send
 		void		sendRsp(std::string msg, int fd);
@@ -91,7 +88,7 @@ class Server
 		void		closeFds();
 
 		// signal methods
-		static void		signalHandler(int signum);
+		static void	signalHandler(int signum);
 
 		// parsing
 		std::vector<std::string>	splitCmd(std::string &str);
@@ -151,3 +148,4 @@ class Server
 // aux
 std::string		currentTime();
 std::string		findMsg(std::vector<std::string> &tokens);
+typedef void	(Server::*CmdFuncs)(std::vector<std::string>&, int&);
