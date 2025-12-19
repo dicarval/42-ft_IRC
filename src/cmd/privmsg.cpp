@@ -53,12 +53,14 @@ void	Server::privmsg(std::vector<std::string> &tokens, int &fd)
 	std::string msg;
 
 	tokens.erase(tokens.begin());
+	if (tokens.size() == 0)
+		return (sendRsp(ERR_NEEDMOREPARAMS(this->getClientFd(fd)->getNickName()), fd));
 	splitPrivmsg(tokens, recipients, channRecipients, msg, fd);
-	if (recipients.empty() && channRecipients.empty())
+	if ((recipients.empty() && channRecipients.empty()))
 		return (sendRsp(ERR_NORECIPIENT(this->getClientFd(fd)->getNickName()), fd));
 	if (msg.empty())
 		return (sendRsp(ERR_NOTEXTTOSEND(this->getClientFd(fd)->getNickName()), fd));
-	if (recipients.size() + channRecipients.size() > 10)
+	if ((recipients.size() + channRecipients.size()) > 10)
 		return (sendRsp(ERR_TOOMANYTARGETS(this->getClientFd(fd)->getNickName()), fd));
 	std::string msgToSend = msg + CRLF;
 	for (size_t i = 0; i < recipients.size(); i++)

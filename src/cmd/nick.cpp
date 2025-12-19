@@ -33,7 +33,7 @@ bool	Server::nickInUse(std::string &nickName)
 	return false;
 }
 
-void	Server::nick(std::vector<std::string> &cmd, int fd)
+void	Server::nick(std::vector<std::string> &cmd, int &fd)
 {
 	if (cmd.size() != 2)
 	{

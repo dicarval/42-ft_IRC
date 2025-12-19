@@ -7,7 +7,7 @@
 
 #include "../../inc/Server.hpp"
 
-void	Server::user(std::vector<std::string> &cmd, int fd)
+void	Server::user(std::vector<std::string> &cmd, int &fd)
 {
 	Client *client = getClientFd(fd);
 

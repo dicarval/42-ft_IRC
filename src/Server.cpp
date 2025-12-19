@@ -204,8 +204,6 @@ void	Server::receiveNewData(int fd)
 			endConnection(fd);
 }
 
-
-
 void	Server::endConnection(int fd)
 {
 	for (std::vector<pollfd>::iterator i = _clientSocketFds.begin(); i != _clientSocketFds.end(); i++)
@@ -362,40 +360,30 @@ bool	Server::registered(int &fd)
 void	Server::parseMessage(std::string &cmd, int &fd)
 {
 	std::vector<std::string> tokens = splitCmd(cmd);
+	std::string cmdUpper[] = {"NICK", "PASS", "QUIT", "USER", "INVITE", "JOIN", "KICK", "MODE", "PART", "PRIVMSG", "TOPIC"};
+	std::string cmdLower[] = {"nick", "pass", "quit", "user", "invite", "join", "kick", "mode", "part", "privmsg", "topic"};
+	size_t sizeCmdNotRegistered = 4;
+	size_t sizeCmdList = sizeof(cmdUpper) / sizeof(cmdUpper[0]);
+	CmdFuncs cmdFuncs[] = {&Server::nick, &Server::pass, &Server::quit, &Server::user, &Server::invite, &Server::join, \
+	&Server::kick, &Server::mode, &Server::part, &Server::privmsg, &Server::topic};
 
 	for (size_t i = 0; i < tokens.size(); i++)
 		std::cout << "splitted cmd " << i << " is " << tokens[i] << std::endl;
 
 	if (tokens.size())
 	{
-		if (tokens[0] == "NICK" || tokens[0] == "nick")
-			nick(tokens, fd);
-		else if (tokens[0] == "PASS" || tokens[0] == "pass")
-			pass(tokens, fd);
-		else if (tokens[0] == "QUIT" || tokens[0] == "quit")
-			quit(tokens, fd);
-		else if (tokens[0] == "USER" || tokens[0] == "user")
-			user(tokens, fd);
-		else if (registered(fd))
+		for (size_t i = 0; i < sizeCmdNotRegistered; i++)
 		{
-			if (tokens[0] == "INVITE" || tokens[0] == "invite")
-				invite(tokens, fd);
-			else if (tokens[0] == "JOIN" || tokens[0] == "join")
-				join(tokens, fd);
-			else if (tokens[0] == "KICK" || tokens[0] == "kick")
-				kick(tokens, fd);
-			else if (tokens[0] == "MODE" || tokens[0] == "mode")
-				mode(tokens, fd);
-			else if (tokens[0] == "PART" || tokens[0] == "part")
-				part(tokens, fd);
-			else if (tokens[0] == "PRIVMSG" || tokens[0] == "privmsg")
-				privmsg(tokens, fd);
-			else if (tokens[0] == "TOPIC" || tokens[0] == "topic")
-				topic(tokens, fd);
-			else
-				sendRsp(ERR_UNKNOWNCOMMAND(this->getClientFd(fd)->getNickName(), tokens[0]), fd);
+			if (!registered(fd) && (tokens[0] == cmdUpper[i] || tokens[0] == cmdLower[i]))
+				return (this->*cmdFuncs[i])(tokens, fd);
 		}
-		else
-			sendRsp(ERR_NOTREGISTERED(std::string("*")), fd);
+		for (size_t i = 4; i < sizeCmdList; i++)
+		{
+			if (registered(fd) && (tokens[0] == cmdUpper[i] || tokens[0] == cmdLower[i]))
+				return (this->*cmdFuncs[i])(tokens, fd);
+			else if ( i == 10)
+				return sendRsp(ERR_UNKNOWNCOMMAND(this->getClientFd(fd)->getNickName(), tokens[0]), fd);
+		}
+		sendRsp(ERR_NOTREGISTERED(std::string("*")), fd);
 	}
 }

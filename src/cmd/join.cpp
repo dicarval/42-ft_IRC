@@ -24,7 +24,7 @@ bool	isInvited(Client *clt, std::string channelName, int flag)
 int		Server::searchClientInChannels(std::string nick)
 {
 	int count = 0;
-	for (int i = 0; i < this->_channels.size(); i++)
+	for (size_t i = 0; i < this->_channels.size(); i++)
 	{
 		if (this->_channels[i].getClientInChannel(nick))
 			count++;
@@ -157,7 +157,7 @@ int		Server::splitJoin(std::vector<std::pair<std::string, std::string> > &token,
 	return 1;
 }
 
-void	Server::join(std::vector<std::string> &cmd, int fd)
+void	Server::join(std::vector<std::string> &cmd, int &fd)
 {
 	std::vector<std::pair<std::string, std::string> > token;
 	if (!splitJoin(token, cmd, fd))

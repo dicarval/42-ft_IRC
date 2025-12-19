@@ -18,7 +18,7 @@ std::string	findMsg(std::vector<std::string> &tokens)
 	if (tokens[1][0] == ':')
 	{
 		tokens[1].erase(tokens[1].begin());
-		for (int i = 1; i < tokens.size(); i++)
+		for (size_t i = 1; i < tokens.size(); i++)
 		{
 			if (tokens.size() == i + 1)
 				temp += tokens[i];
