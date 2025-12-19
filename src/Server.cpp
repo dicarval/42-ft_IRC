@@ -363,6 +363,9 @@ void	Server::parseMessage(std::string &cmd, int &fd)
 {
 	std::vector<std::string> tokens = splitCmd(cmd);
 
+	for (size_t i = 0; i < tokens.size(); i++)
+		std::cout << "splitted cmd " << i << " is " << tokens[i] << std::endl;
+
 	if (tokens.size())
 	{
 		if (tokens[0] == "NICK" || tokens[0] == "nick")
