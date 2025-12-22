@@ -360,11 +360,11 @@ bool	Server::registered(int &fd)
 void	Server::parseMessage(std::string &cmd, int &fd)
 {
 	std::vector<std::string> tokens = splitCmd(cmd);
-	std::string cmdUpper[] = {"NICK", "PASS", "QUIT", "USER", "INVITE", "JOIN", "KICK", "MODE", "PART", "PRIVMSG", "TOPIC"};
-	std::string cmdLower[] = {"nick", "pass", "quit", "user", "invite", "join", "kick", "mode", "part", "privmsg", "topic"};
+	std::string cmdUpper[] = {"USER", "PASS", "QUIT", "NICK", "INVITE", "JOIN", "KICK", "MODE", "PART", "PRIVMSG", "TOPIC"};
+	std::string cmdLower[] = {"user", "pass", "quit", "nick", "invite", "join", "kick", "mode", "part", "privmsg", "topic"};
 	size_t sizeCmdNotRegistered = 4;
 	size_t sizeCmdList = sizeof(cmdUpper) / sizeof(cmdUpper[0]);
-	CmdFuncs cmdFuncs[] = {&Server::nick, &Server::pass, &Server::quit, &Server::user, &Server::invite, &Server::join, \
+	CmdFuncs cmdFuncs[] = { &Server::user, &Server::pass, &Server::quit, &Server::nick, &Server::invite, &Server::join, \
 	&Server::kick, &Server::mode, &Server::part, &Server::privmsg, &Server::topic};
 
 	for (size_t i = 0; i < tokens.size(); i++)
@@ -377,7 +377,7 @@ void	Server::parseMessage(std::string &cmd, int &fd)
 			if (!registered(fd) && (tokens[0] == cmdUpper[i] || tokens[0] == cmdLower[i]))
 				return (this->*cmdFuncs[i])(tokens, fd);
 		}
-		for (size_t i = 4; i < sizeCmdList; i++)
+		for (size_t i = 2; i < sizeCmdList; i++)
 		{
 			if (registered(fd) && (tokens[0] == cmdUpper[i] || tokens[0] == cmdLower[i]))
 				return (this->*cmdFuncs[i])(tokens, fd);
