@@ -150,19 +150,13 @@ void	Server::acceptNewClient()
 	int newFd = accept(_serverSocketFd, NULL, NULL);
 
 	if (newFd == -1)
-	{
-		std::cout << "accept() failed." << std::endl;
-		return;
-	}
+		throw (std::runtime_error("accept() failed."));
 	if (fcntl(newFd, F_SETFL, O_NONBLOCK) == -1)
-	{
-		std::cout << "ftcnl() nonblock failed." << std::endl;
-		return;
-	}
+		throw (std::runtime_error("ftcnl() nonblock failed."));
 	this->_maxFd++;
 	std::cout << "New client: " << newFd << std::endl;
 	if (this->_maxFd > 1020)
-		std::cout << "Max clients reached" << std::endl;
+		throw (std::runtime_error("Max number of clients reached"));
 
 	Client client;
 	memset(&clientAddress, 0, sizeof(clientAddress));
@@ -185,7 +179,7 @@ void	Server::receiveNewData(int fd)
 	if (_maxFd < 1020)
 	{
 		if (bytes == -1)
-			std::cout << "recv() failed." << std::endl;
+			throw (std::runtime_error("recv() failed."));
 		else if (bytes == 0)
 			endConnection(fd);
 		else
@@ -281,7 +275,7 @@ void	Server::removeChannel(std::string name)
 void	Server::sendRsp(std::string msg, int fd)
 {
 	if (send(fd, msg.c_str(), msg.size(), 0) == -1)
-		std::cout << "send() failed" << std::endl;
+		throw (std::runtime_error("send() failed"));
 }
 
 // close methods
