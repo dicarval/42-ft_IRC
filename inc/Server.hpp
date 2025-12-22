@@ -173,7 +173,7 @@ class Server
 			void		channelExist(std::vector<std::pair<std::string, std::string> > token, size_t i, size_t j, int fd);
 			/* Parses the JOIN command arguments, separating channel names and keys. */
 			int			splitJoin(std::vector<std::pair<std::string, std::string> > &token, std::vector<std::string> &cmd, int fd);
-			/* Adds a client to a channel, creating it if it doesn't exist. */
+			/* Adds a client to a channel, verifying if it exists or not */
 			void		join(std::vector<std::string> &, int &);
 
 		// kick cmd
