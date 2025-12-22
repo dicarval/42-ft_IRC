@@ -335,9 +335,6 @@ void	Server::parseMessage(std::string &cmd, int &fd)
 	CmdFuncs cmdFuncs[] = { &Server::user, &Server::pass, &Server::quit, &Server::nick, &Server::invite, &Server::join, \
 	&Server::kick, &Server::mode, &Server::part, &Server::privmsg, &Server::topic};
 
-	for (size_t i = 0; i < tokens.size(); i++)
-		std::cout << "splitted cmd " << i << " is " << tokens[i] << std::endl;
-
 	if (tokens.size())
 	{
 		for (size_t i = 0; i < sizeCmdNotRegistered; i++)
