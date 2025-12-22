@@ -119,7 +119,7 @@ void	Server::serverInit()
 void	Server::socketInit()
 {
 	serverAddress.sin_family = AF_INET;
-	serverAddress.sin_addr .s_addr = INADDR_ANY;
+	serverAddress.sin_addr.s_addr = INADDR_ANY;
 	serverAddress.sin_port = htons(this->_port);
 	this->_serverSocketFd = socket(AF_INET, SOCK_STREAM, 0);
 	int opt = 1;
@@ -327,14 +327,14 @@ bool	Server::registered(int &fd)
 
 void	Server::parseMessage(std::string &cmd, int &fd)
 {
-	std::vector<std::string> tokens = splitCmd(cmd);
+	CmdFuncs cmdFuncs[] = { &Server::user, &Server::pass, &Server::quit, &Server::nick, &Server::invite, &Server::join, \
+	&Server::kick, &Server::mode, &Server::part, &Server::privmsg, &Server::topic};
 	std::string cmdUpper[] = {"USER", "PASS", "QUIT", "NICK", "INVITE", "JOIN", "KICK", "MODE", "PART", "PRIVMSG", "TOPIC"};
 	std::string cmdLower[] = {"user", "pass", "quit", "nick", "invite", "join", "kick", "mode", "part", "privmsg", "topic"};
 	size_t sizeCmdNotRegistered = 4;
 	size_t sizeCmdList = sizeof(cmdUpper) / sizeof(cmdUpper[0]);
-	CmdFuncs cmdFuncs[] = { &Server::user, &Server::pass, &Server::quit, &Server::nick, &Server::invite, &Server::join, \
-	&Server::kick, &Server::mode, &Server::part, &Server::privmsg, &Server::topic};
 
+	std::vector<std::string> tokens = splitCmd(cmd);
 	if (tokens.size())
 	{
 		for (size_t i = 0; i < sizeCmdNotRegistered; i++)

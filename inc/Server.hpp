@@ -33,7 +33,7 @@ class Server
 		int							_port;
 		int							_reserveFd;
 		int							_serverSocketFd;
-		static bool						_signal;
+		static bool					_signal;
 		std::string					_password;
 		std::vector<Client>			_clients;
 		std::vector<Channel>		_channels;
@@ -129,21 +129,31 @@ class Server
 			void		nick(std::vector<std::string> &, int &);
 
 		// part cmd
+			/* Splits the channel section of the command PART */
 			void		splitChannelPart(std::vector<std::string> &channPart, std::string &temp);
+			/* Splits the command PART by channel and reason */
 			bool		splitPart(std::vector<std::string> &tokens, std::vector<std::string> &channPart, std::string &reason, int fd);
+			/* Removes a user from one or more groups */
 			void		part(std::vector<std::string> &, int &);
 
 		// privmsg cmd
+			/* Splits the recipient section of the command PRIVMSG */
 			void		splitRecipients(std::vector<std::string> &recipients, std::vector<std::string> &channPrivmsg, std::string &temp);
+			/* Splits the command PRIVMSG by recipients (group and individual) and message */
 			void		splitPrivmsg(std::vector<std::string> &tokens, std::vector<std::string> &recipients, std::vector<std::string> &channPrivmsg, std::string &msg, int fd);
+			/*Sends a message to one or more recipients (group and individual) */
 			void		privmsg(std::vector<std::string> &, int &);
 
 		// quit cmd
+			/* Splits the message section of the command QUIT */
 			std::string	splitQuit(std::vector<std::string> &tokens);
+			/* Remove user from the channels and closes and quits the server connection */
 			void		quit(std::vector<std::string> &, int &);
 
 		// topic cmd
+			/* Splits the message section of the command TOPIC */
 			int			splitTopic(std::vector<std::string> &tokens, std::string &chanName, std::string &topic);
+			/* Sets or changes a channel topic */
 			void		topic(std::vector<std::string> &, int &);
 
 		// user cmd
@@ -179,7 +189,6 @@ class Server
 			std::string	passwordMode(std::vector<std::string> tokens, Channel *channel, size_t &pos, char opera, int fd, std::string &args, std::string chain);
 			/* Changes the mode (settings/permissions) of a channel. */
 			void		mode(std::vector<std::string> &, int &);
-
 };
 
 // aux
