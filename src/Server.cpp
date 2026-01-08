@@ -128,10 +128,10 @@ void	Server::socketInit()
 		throw (std::runtime_error("Failed to create server socket"));
 
 	if (setsockopt(_serverSocketFd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0 )
-		throw (std::runtime_error("Failed to set option (SP_REUSEADDR) on socket"));
+		throw (std::runtime_error("Failed to set option (SO_REUSEADDR) on socket"));
 
 	if (fcntl(_serverSocketFd, F_SETFL, O_NONBLOCK) == -1)
-		throw(std::runtime_error("faild to set option (O_NONBLOCK) on socket"));
+		throw(std::runtime_error("Failed to set option (O_NONBLOCK) on socket"));
 
 	if (bind(_serverSocketFd, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) == -1)
 		throw (std::runtime_error("Failed to bind"));
