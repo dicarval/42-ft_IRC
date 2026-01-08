@@ -12,6 +12,12 @@ int	main(int ac, char** av)
 	std::cout << "<<<<< Server >>>>>" << std::endl;
 
 	server.setPort(std::atoi(av[1]));
+	if (!server.getPort())
+	{
+		std::cerr << "Invalid port" << std::endl;
+		return 1;
+	}
+
 	server.setPassword(av[2]);
 
 	try

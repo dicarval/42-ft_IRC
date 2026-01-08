@@ -2,7 +2,7 @@
 
 bool Server::_signal = false;
 
-Server::Server() : _maxFd(2), _reserveFd(-1), _serverSocketFd(-1), _password("")
+Server::Server() : _maxFd(2),  _port(0), _reserveFd(-1), _serverSocketFd(-1), _password("")
 {}
 
 Server::Server(Server const &og)
@@ -81,7 +81,8 @@ void	Server::setFd(int fd)
 
 void	Server::setPort(int port)
 {
-	this->_port = port;
+	if (port >= 1024 && port <= 65535)
+		this->_port = port;
 }
 
 void	Server::setPassword(std::string pw)
