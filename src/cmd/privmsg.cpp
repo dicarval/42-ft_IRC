@@ -77,8 +77,13 @@ void	Server::privmsg(std::vector<std::string> &tokens, int &fd)
 	for (size_t i = 0; i < channRecipients.size(); i++)
 	{
 		if (this->getChannel(channRecipients[i]))
-			this->getChannel(channRecipients[i])->sendToEveryoneElse(":" + this->getClientFd(fd)->getNickName() + "!~" + \
-			this->getClientFd(fd)->getUserName() + "@localhost PRIVMSG #" + channRecipients[i] + " :" + msgToSend, fd);
+		{
+			if (this->getChannel(channRecipients[i])->getClient(fd))
+				this->getChannel(channRecipients[i])->sendToEveryoneElse(":" + this->getClientFd(fd)->getNickName() + "!~" + \
+				this->getClientFd(fd)->getUserName() + "@localhost PRIVMSG #" + channRecipients[i] + " :" + msgToSend, fd);
+			else
+				sendRsp(ERR_NOTONCHANNEL(this->getClientFd(fd)->getNickName(), channRecipients[i]), fd);
+		}
 		else
 			sendRsp(ERR_NOSUCHCHANNEL(channRecipients[i], this->getClientFd(fd)->getNickName()), fd);
 	}
