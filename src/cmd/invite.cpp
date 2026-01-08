@@ -17,7 +17,7 @@ void	Server::invite(std::vector<std::string> &cmd, int &fd)
 		return sendRsp(ERR_NEEDMOREPARAMS(getClientFd(fd)->getNickName()), fd);
 	std::string chanName = cmd[2].substr(1);
 	if ((cmd[2][0] != '#') || !getChannel(chanName))
-		return sendRsp(ERR_NOSUCHCHANNEL(getClientFd(fd)->getNickName(), chanName), fd);
+		return sendRsp(ERR_NOSUCHCHANNEL(getClientFd(fd)->getNickName(), cmd[2]), fd);
 	if (!(getChannel(chanName)->getClient(fd)) && !(getChannel(chanName)->getAdmin(fd)))
 		return sendRsp(ERR_NOTONCHANNEL(getClientFd(fd)->getNickName(), chanName), fd);
 	if (getChannel(chanName)->getClientInChannel(cmd[1]))

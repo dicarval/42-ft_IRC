@@ -10,14 +10,14 @@
 
 void	Server::kick(std::vector<std::string> &cmd, int &fd)
 {
-	if (cmd.size() < 3)
-		return sendRsp(ERR_NEEDMOREPARAMS(getClientFd(fd)->getNickName()), fd);
-
 	std::string channels = cmd[1];
 	std::string user = cmd[2];
 	std::string reason;
 
-	if (cmd.size() > 3 && cmd[3][0] == ':')
+	if (cmd.size() < 3)
+		return sendRsp(ERR_NEEDMOREPARAMS(getClientFd(fd)->getNickName()), fd);
+
+	if (cmd.size() > 4 && cmd[3][0] == ':')
 	{
 		for (size_t i = 3; i < cmd.size(); i++)
 		{
@@ -28,7 +28,7 @@ void	Server::kick(std::vector<std::string> &cmd, int &fd)
 		if (!reason.empty() && reason[0] == ':')
 			reason.erase(0, 1);
 	}
-	else
+	else if (cmd.size() >= 4)
 	{
 		reason = cmd[3];
 		if (!reason.empty() && reason[0] == ':')
