@@ -58,9 +58,10 @@ void	Server::topic(std::vector<std::string> &tokens, int &fd)
 		chanName.erase(chanName.begin());
 	else
 		return (sendRsp(ERR_NOSUCHCHANNEL(this->getClientFd(fd)->getNickName(), chanName), fd));
+	if (!this->getChannel(chanName))
+		return (sendRsp(ERR_NOSUCHCHANNEL(this->getClientFd(fd)->getNickName(), chanName), fd));
 	if (!this->getChannel(chanName)->getClient(fd) && !this->getChannel(chanName)->getAdmin(fd))
 		return (sendRsp(ERR_NOTONCHANNEL(this->getClientFd(fd)->getNickName(), chanName), fd));
-
 	if (tokens.size() == 1)
 	{
 		if (this->getChannel(chanName)->getChannelTopic() == "")
