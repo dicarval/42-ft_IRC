@@ -116,14 +116,16 @@ int		Server::splitJoin(std::vector<std::pair<std::string, std::string> > &token,
 		{
 			if (passStr[i] == ',')
 			{
-				token[j].second = buff;
+				if (j < token.size())
+					token[j].second = buff;
 				j++;
 				buff.clear();
 			}
 			else
 				buff += passStr[i];
 		}
-		token[j].second = buff;
+		if (j < token.size())
+			token[j].second = buff;
 	}
 	for (size_t i = 0; i < token.size(); i++)
 	{
