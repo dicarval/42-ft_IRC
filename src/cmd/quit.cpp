@@ -16,20 +16,29 @@ void	Server::quit(std::vector<std::string> &tokens, int &fd)
 	reason = splitQuit(tokens) + CRLF;
 	for (long i = 0; i < static_cast<long>(this->_channels.size()); i++)
 	{
+		bool deleted = false;
 		if (this->_channels[i].getClient(fd))
 		{
 			this->_channels[i].removeClient(fd);
 			if (this->_channels[i].getNumberOfClients() == 0)
+			{
 				removeChannel(this->_channels[i--].getName());
+				deleted = true;
+			}
 			else
 				this->_channels[i].sendToAll(":" + this->getClientFd(fd)->getNickName() + \
 				"!~" + this->getClientFd(fd)->getUserName() + "@localhost QUIT " + reason);
 		}
+		if (deleted)
+			continue ;
 		if (this->_channels[i].getAdmin(fd))
 		{
 			this->_channels[i].removeAdmin(fd);
 			if (this->_channels[i].getNumberOfClients() == 0)
+			{
 				removeChannel(this->_channels[i--].getName());
+				continue ;
+			}
 			else
 				this->_channels[i].sendToAll(":" + this->getClientFd(fd)->getNickName() + \
 				"!~" + this->getClientFd(fd)->getUserName() + "@localhost QUIT " + reason);

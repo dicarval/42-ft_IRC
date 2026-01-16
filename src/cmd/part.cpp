@@ -36,6 +36,7 @@ std::vector<std::string> &channPart, std::string &reason, int fd)
 		else
 			splitChannelPart(channPart, temp);
 	}
+	splitChannelPart(channPart, temp);
 	for (size_t i = 0; i < channPart.size(); i++)
 	{
 		if (*(channPart[i].begin()) == '#')
