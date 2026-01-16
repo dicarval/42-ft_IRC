@@ -13,7 +13,6 @@ void	Server::pass(std::vector<std::string> &cmd, int &fd)
 		return sendRsp(ERR_NEEDMOREPARAMS(std::string("*")), fd);
 	else if (!cli->getRegistered())
 	{
-		//std::cout << "password: " << cmd[1] << std::endl;
 		if (cmd[1] == _password)
 			cli->setRegistered(true);
 		else

@@ -11,8 +11,6 @@ void	Server::user(std::vector<std::string> &cmd, int &fd)
 {
 	Client *client = getClientFd(fd);
 
-	// std::cout << "is registered? " <<client->getRegistered() << std::endl;
-
 	if (client && cmd.size() < 5)
 		return sendRsp(ERR_NEEDMOREPARAMS(client->getNickName()), fd);
 	if (!client || !client->getRegistered() || cmd[2] != "0" || cmd [3] != "*")

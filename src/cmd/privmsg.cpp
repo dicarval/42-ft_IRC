@@ -10,7 +10,9 @@
 
 void	Server::splitRecipients(std::vector<std::string> &recipients, std::vector<std::string> &channPrivmsg, std::string &temp)
 {
-	if (*(temp.begin()) == '#')
+	if (temp.empty())
+			return ;
+	else if (*(temp.begin()) == '#')
 	{
 		temp.erase(temp.begin());
 		if (temp.empty())
@@ -43,6 +45,7 @@ std::vector<std::string> &channPrivmsg, std::string &msg, int fd)
 		else
 			splitRecipients(recipients, channPrivmsg, temp);
 	}
+	splitRecipients(recipients, channPrivmsg, temp);
 	msg = findMsg(tokens);
 }
 
@@ -78,7 +81,7 @@ void	Server::privmsg(std::vector<std::string> &tokens, int &fd)
 	{
 		if (this->getChannel(channRecipients[i]))
 		{
-			if (this->getChannel(channRecipients[i])->getClient(fd))
+			if (this->getChannel(channRecipients[i])->getClient(fd) || this->getChannel(channRecipients[i])->getAdmin(fd))
 				this->getChannel(channRecipients[i])->sendToEveryoneElse(":" + this->getClientFd(fd)->getNickName() + "!~" + \
 				this->getClientFd(fd)->getUserName() + "@localhost PRIVMSG #" + channRecipients[i] + " :" + msgToSend, fd);
 			else
