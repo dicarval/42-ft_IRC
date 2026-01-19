@@ -1,5 +1,7 @@
 #include "../../inc/Server.hpp"
 
+//* Syntax: quit/QUIT :message
+//* Ex.: quit :Going home
 
 std::string Server::splitQuit(std::vector<std::string> &tokens)
 {

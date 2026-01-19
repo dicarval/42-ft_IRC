@@ -24,7 +24,6 @@ void	Server::splitRecipients(std::vector<std::string> &recipients, std::vector<s
 	temp.clear();
 }
 
-
 void	Server::splitPrivmsg(std::vector<std::string> &tokens, \
 std::vector<std::string> &recipients, \
 std::vector<std::string> &channPrivmsg, std::string &msg, int fd)
@@ -61,9 +60,9 @@ void	Server::privmsg(std::vector<std::string> &tokens, int &fd)
 	splitPrivmsg(tokens, recipients, channRecipients, msg, fd);
 	if ((recipients.empty() && channRecipients.empty()))
 		return (sendRsp(ERR_NORECIPIENT(this->getClientFd(fd)->getNickName()), fd));
-	if (msg.empty())
+	else if (msg.empty())
 		return (sendRsp(ERR_NOTEXTTOSEND(this->getClientFd(fd)->getNickName()), fd));
-	if ((recipients.size() + channRecipients.size()) > 10)
+	else if ((recipients.size() + channRecipients.size()) > 10)
 		return (sendRsp(ERR_TOOMANYTARGETS(this->getClientFd(fd)->getNickName()), fd));
 	std::string msgToSend = msg + CRLF;
 	for (size_t i = 0; i < recipients.size(); i++)

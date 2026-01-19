@@ -152,7 +152,7 @@ class Server
 
 		// topic cmd
 			/* Splits the message section of the command TOPIC */
-			int			splitTopic(std::vector<std::string> &tokens, std::string &chanName, std::string &topic);
+			bool		splitTopic(std::vector<std::string> &tokens, std::string &chanName, std::string &topic);
 			/* Sets or changes a channel topic */
 			void		topic(std::vector<std::string> &, int &);
 
