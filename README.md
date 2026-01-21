@@ -131,5 +131,5 @@ Here are some of the classic references and documentation used to build this pro
 
 ### AI Usage
 
-> "AI tools were used to assist in debugging logic and to clarify the expected behavior of specific IRC commands based on the RFCs. Specifically, GitHub Copilot was used to generate boilerplate code for command classes and to suggest optimizations for the main polling loop."
+> "AI tools were used to assist in debugging logic and to clarify the expected behavior of specific IRC commands based on the RFCs."
 ---
