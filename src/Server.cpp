@@ -190,7 +190,11 @@ void	Server::receiveNewData(int fd)
 				return;
 			std::vector<std::string> splitedmessage = splitMessage(cli->getBuffer());
 			for(size_t i = 0; i < splitedmessage.size(); i++)
+			{
+				if (!getClientFd(fd))
+					break ;
 				parseMessage(splitedmessage[i], fd);
+			}
 			if(getClientFd(fd))
 				getClientFd(fd)->clearBuffer();
 		}

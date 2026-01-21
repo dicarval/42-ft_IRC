@@ -21,7 +21,7 @@ void	Server::invite(std::vector<std::string> &cmd, int &fd)
 	if (!(getChannel(chanName)->getClient(fd)) && !(getChannel(chanName)->getAdmin(fd)))
 		return sendRsp(ERR_NOTONCHANNEL(getClientFd(fd)->getNickName(), chanName), fd);
 	if (getChannel(chanName)->getClientInChannel(cmd[1]))
-		return sendRsp(ERR_USERONCHANNEL(getClientFd(fd)->getNickName(), chanName), fd);
+		return sendRsp(ERR_USERONCHANNEL(getClientFd(fd)->getNickName(), getChannel(chanName)->getClientInChannel(cmd[1])->getNickName(), chanName), fd);
 	Client *clt = getClientNick(cmd[1]);
 	if (!clt)
 		return sendRsp(ERR_NOSUCHNICK(cmd[1]), fd);

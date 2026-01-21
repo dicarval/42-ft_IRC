@@ -4,7 +4,7 @@
 
 //* NORMAL REPLIES
 # define RPL_CONNECTED(nickname) (": 001 " + nickname + " :Welcome to the IRC server!" + CRLF)
-# define RPL_CHANNELMODES(nickname, channelname, modes) (": 324 " + nickname + " #" + channelname + " " + modes + CRLF)
+# define RPL_CHANNELMODES(nickname, channelname, modes) (": 324 " + nickname + " " + channelname + " " + modes + CRLF)
 # define RPL_CREATIONTIME(nickname, channelname, creationtime) (": 329 " + nickname + " #" + channelname + " " + creationtime + CRLF)
 # define RPL_NOTOPIC(nickname, channelname) (": 331 " + nickname + " #" + channelname + " :No topic is set" + CRLF)
 # define RPL_TOPICIS(nickname, channelname, topic) (": 332 " + nickname + " #" +channelname + " :" + topic + CRLF)
@@ -29,7 +29,7 @@
 # define ERR_NICKNAMEINUSE(nickname) (": 433 " + nickname + " :Nickname is already in use" + CRLF)
 # define ERR_USERNOTINCHANNEL(name, target, channelname) (": 441 " + name + " " + target + " #" + channelname + " :They aren't on that channel" + CRLF)
 # define ERR_NOTONCHANNEL(nickname, channelname) (": 442 " + nickname + " " + channelname + " :You're not on that channel" + CRLF)
-# define ERR_USERONCHANNEL(nickname, channelname) (": 443 " + nickname + " #" + channelname + " :is already on channel" + CRLF)
+# define ERR_USERONCHANNEL(nickname, nick, channelname) (": 443 " + nickname + " " + nick + " #" + channelname + " :is already on channel" + CRLF)
 # define ERR_NOTREGISTERED(nickname) (": 451 " + nickname + " :You have not registered!" + CRLF)
 # define ERR_NEEDMOREPARAMS(nickname) (": 461 " + nickname + " :Not enough parameters." + CRLF)
 # define ERR_ALREADYREGISTERED(nickname) (": 462 " + nickname + " :You may not reregister !" + CRLF)
