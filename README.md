@@ -100,7 +100,7 @@ The server supports the following IRC commands:
 >
 > Channel operators can change the channel's modes. There are five modes we handle:
 > - `+o`/`-o`: Give/remove operator status to/from a user.
-> - `+t`/`-t`: Allow/prevent users who are not operators from changing the topic.
+> - `+t`/`-t`: Prevent/allow users who are not operators from changing the topic.
 > - `+i`/`-i`: Set/unset the channel as invite-only.
 > - `+k`/`-k`: Set/unset a password for the channel.
 > - `+l`/`-l`: Set/unset the channel's user limit.
